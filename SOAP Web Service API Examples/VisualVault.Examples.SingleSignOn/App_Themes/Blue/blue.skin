@@ -1,0 +1,31 @@
+﻿<%--
+Default skin template. The following skins are provided as examples only.
+
+1. Named control skin. The SkinId should be uniquely defined because
+   duplicate SkinId's per control type are not allowed in the same theme.
+
+<asp:GridView runat="server" SkinId="gridviewSkin" BackColor="White" >
+   <AlternatingRowStyle BackColor="Blue" />
+</asp:GridView>
+
+2. Default skin. The SkinId is not defined. Only one default 
+   control skin per control type is allowed in the same theme.
+
+<asp:Image runat="server" ImageUrl="~/images/image1.jpg" />
+--%>
+
+<asp:GridView runat="server" SkinID="DocumentGridView"  CellPadding="4" ForeColor="#333333" 
+        Width="100%" BorderStyle="None"  
+        AutoGenerateColumns="False" 
+        BorderWidth="0px" CssClass="GridTopCell" 
+         GridLines="Vertical"
+             RowStyle-BackColor="#EFF3FB" 
+             FooterStyle-BackColor="#507CD1" FooterStyle-Font-Bold="True" FooterStyle-ForeColor="White"
+             PagerStyle-BackColor="#2461BF" PagerStyle-ForeColor="White" PagerStyle-HorizontalAlign="Center"
+             SelectedRowStyle-BackColor="#D1DDF1" SelectedRowStyle-Font-Bold="True" SelectedRowStyle-ForeColor="#333333"
+             HeaderStyle-BackColor="#507CD1" HeaderStyle-Font-Bold="True" HeaderStyle-ForeColor="White"
+             EditRowStyle-BackColor="#2461BF" HeaderStyle-HorizontalAlign="Left" 
+             AlternatingRowStyle-BackColor="White"
+             HorizontalAlign="Left" 
+             HeaderStyle-CssClass="ConfigurationGridViewHeaderStyle"
+         /> 

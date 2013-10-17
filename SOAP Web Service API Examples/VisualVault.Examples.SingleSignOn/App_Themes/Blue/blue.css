@@ -1,0 +1,685 @@
+﻿body
+{
+    font-family: arial;
+    font-size: small;
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
+.fieldBackground
+{
+    background-color: #F1F1F7;    
+}
+
+.title
+{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12pt;
+    font-weight: bold;
+}
+
+.subtitle
+{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10pt;
+    font-weight: bold;
+}
+
+.text
+{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 8pt;
+}
+
+
+.FormLabel
+{
+    text-align: left;
+    font-weight: bold;
+}
+
+
+.ErrorMessage
+{
+    color: Red;
+}
+
+.SectionTitle
+{
+    font-weight: bold;
+    color: #033165;
+}
+
+.TableHeaderStatewide
+{
+    font-weight: bold;
+}
+
+h1
+{
+    font-weight: bold;
+    font-size: 1.5em;
+    color: #033165;
+}
+
+
+h2
+{
+    font-weight: bold;
+    color: #033165;
+    margin-bottom: 2px;
+    padding-bottom: 2px;
+}
+
+A:link
+{
+    color: #033165;
+    text-decoration: none;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+    font-weight: normal;
+}
+
+A:visited
+{
+    color: #033165;
+    text-decoration: none;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+}
+
+A:active
+{
+    color: #033165;
+    text-decoration: none;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+}
+
+A:hover
+{
+    color: #033165;
+    text-decoration: underline;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+}
+
+A[disabled], A:hover[disabled]
+{
+    text-decoration: none;
+    color: #7F7F7F;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+}
+
+.ConfigurationGridViewHeaderStyle th
+{
+    text-align: left;
+}
+
+.ConfigurationGridViewHeaderStyle
+{
+    font-weight: normal;
+    font-size: 8pt;
+    color: #808080;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+    text-align: left;
+    text-decoration: none;
+}
+
+/* Grid Page Styles */
+.ScrollGrid
+{
+    vertical-align: top;
+    overflow: scroll;
+    height: 400px;
+    width: 100%;
+}
+
+.PageNavigationBar
+{
+    border-right: #D8E0EB 1px solid;
+    border-top: #D8E0EB 1px solid;
+    border-bottom: #D8E0EB 1px solid;
+    background-image: url(images/toolgrad.gif);
+    border-left: #D8E0EB 1px solid;
+    background-repeat: repeat-x;
+    font-family: Verdana;
+    height: 25px;
+    background-color: #9ebff6;
+    font-weight: normal;
+    font-size: 8pt;
+    color: #003399;
+}
+.SubNavigationBar
+{
+    font-family: Verdana;
+    height: 25px;
+    font-weight: normal;
+    font-size: 8pt;
+    color: #003399;
+}
+.GridNavigationBar
+{
+    background: #D7E3F7;
+    border: #979797 1px solid;
+    font-family: Verdana;
+    height: 25px;
+    font-weight: normal;
+    font-size: 8pt;
+    color: #003399;
+    white-space: nowrap;
+}
+
+.GridNavigationBarGray
+{
+    border-right: #D8E0EB 1px solid;
+    border-top: #D8E0EB 1px solid;
+    border-bottom: #D8E0EB 1px solid;
+    background-image: url(images/barGradGray.gif);
+    border-left: #D8E0EB 1px solid;
+    background-repeat: repeat-x;
+    font-family: Verdana;
+    height: 25px;
+    font-weight: normal;
+    font-size: 8pt;
+    color: #003399;
+}
+
+.GrayNavigationBar
+{
+    border-right: #D8E0EB 1px solid;
+    border-top: #D8E0EB 1px solid;
+    border-bottom: #D8E0EB 1px solid;
+    background-image: url(images/barGradGray.gif);
+    border-left: #D8E0EB 1px solid;
+    background-repeat: repeat-x;
+    background-position: bottom;
+    font-family: Verdana;
+    height: 30px;
+    font-weight: normal;
+    font-size: 8pt;
+    color: #003399;
+}
+
+.LightBlueBar
+{
+    border-right: #D8E0EB 1px solid;
+    border-top: #D8E0EB 1px solid;
+    border-bottom: #D8E0EB 1px solid;
+    background-image: url(images/lightbluegrad.gif);
+    border-left: #D8E0EB 1px solid;
+    background-repeat: repeat-x;
+    background-position: bottom;
+    font-family: Verdana;
+    height: 30px;
+}
+
+
+.NavBarButton
+{
+    border-right: 1px solid #DCDCDC;
+    padding-right: 8px;
+    padding-left: 8px;
+    font-size: 11px; /*background-image: url(images/bluebar.gif);*/
+    background-image: url(images/partgradp.gif);
+    background-repeat: repeat-x;
+    padding-bottom: 2px;
+    border-left: 1px solid #DCDCDC;
+    color: #000000;
+    padding-top: 3px;
+    font-family: Verdana, Arial;
+    background-color: transparent;
+    text-align: center;
+    text-decoration: none;
+}
+.NavBarButton:hover
+{
+    padding-right: 8px;
+    padding-left: 8px;
+    font-size: 11px;
+    background-image: url(images/goldbar2.gif);
+    padding-bottom: 2px;
+    color: #000000;
+    padding-top: 3px;
+    background-repeat: repeat-x;
+    font-family: Verdana, Arial;
+    background-color: transparent;
+    text-decoration: none;
+}
+
+.TaskButtonBar
+{
+    border-right: #D8E0EB 1px solid;
+    border-top: #D8E0EB 1px solid;
+    border-bottom: #D8E0EB 1px solid;
+    background-image: url(images/partgradp.gif);
+    border-left: #D8E0EB 1px solid;
+    background-repeat: repeat-x;
+    font-family: Verdana;
+    height: 20px;
+    font-weight: normal;
+    font-size: 8pt;
+    color: #003399;
+}
+.PageNavigationControls
+{
+    font-family: Verdana;
+    height: 20px;
+    font-weight: normal;
+    font-size: 8pt;
+    color: #000000;
+}
+
+.PageGridSearch
+{
+    background-color: #ffffff;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-weight: normal;
+    font-size: 8pt;
+    color: #000000;
+    font-size: 8pt;
+}
+
+.SearchTitles
+{
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-weight: normal;
+    font-size: 8pt;
+    color: #000000;
+    font-size: 8pt;
+}
+
+.GridPageHeader
+{
+    font-weight: 500;
+    font-size: 8pt;
+    color: #808080;
+    font-family: Verdana;
+    background-color: transparent;
+}
+.GridHeaderRight
+{
+    font-weight: 500;
+    font-size: 8pt;
+    color: #808080;
+    border-bottom: #808080 1px solid;
+    font-family: Verdana;
+    background-color: transparent;
+    text-align: right;
+}
+.GridHeader
+{
+    font-weight: 500;
+    font-size: 8pt;
+    color: #808080;
+    border-bottom: #808080 1px solid;
+    font-family: Verdana;
+    background-color: transparent;
+    text-align: left;
+}
+
+.GridHeaderBold
+{
+    font-weight: 500;
+    font-size: 9pt;
+    word-spacing: normal;
+    color: #000000;
+    border-bottom: #C0C0C0 1px inset;
+    font-family: Verdana;
+    background-color: transparent;
+    text-align: left;
+}
+.SubscEditGridItem
+{
+    background-image: url(images/toolgrad.gif);
+    font-weight: normal;
+    font-size: 8pt;
+    overflow: hidden;
+    color: #000000;
+    font-family: Verdana;
+    text-align: left;
+    height: 22px;
+}
+.SubscGridItem
+{
+    font-weight: normal;
+    font-size: 8pt;
+    overflow: hidden;
+    color: #000000;
+    font-family: Verdana;
+    text-align: left;
+    height: 20px;
+}
+.EditGridItem
+{
+    background-image: url(images/partgradp_rev.gif);
+    font-weight: normal;
+    font-size: 8pt;
+    overflow: hidden;
+    color: #000000;
+    font-family: Verdana;
+    text-align: left;
+    background-position-y: bottom;
+    background-repeat: repeat-x;
+}
+
+.SubEditItem
+{
+    background-color: #f5f5f5;
+    border-top: #696969 1px solid;
+    border-left: #696969 1px solid;
+    border-right: #696969 1px solid;
+    border-bottom: #696969 1px solid;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.SelectedGridItem
+{
+    background-image: url(images/toolgrad.gif);
+    background-position-y: bottom;
+    background-repeat: repeat-x;
+}
+
+.SubscGridHeader
+{
+    font-weight: 500;
+    font-size: 8pt;
+    color: #808080;
+    border-bottom: #808080 1px solid;
+    font-family: Verdana;
+    background-image: url(images/partgradp_rev.gif);
+    text-align: left;
+    height: 22px;
+}
+
+.GridItem
+{
+    font-weight: normal;
+    font-size: 8pt;
+    color: #000000;
+    font-family: Verdana;
+    text-align: left;
+    border-width: 0px;
+    border-style: none;
+}
+.GridItemCenter
+{
+    font-weight: normal;
+    font-size: 8pt;
+    color: #000000;
+    font-family: Verdana;
+    text-align: center;
+    border-width: 0px;
+    border-style: none;
+}
+
+.GridItemNoWrap
+{
+    font-weight: normal;
+    font-size: 8pt;
+    overflow: hidden;
+    color: #000000;
+    font-family: Verdana;
+    text-align: left;
+    border-width: 0px;
+    border-style: none;
+    white-space: nowrap;
+}
+
+.GridItemHardBreak
+{
+    font-weight: normal;
+    font-size: 8pt;
+    overflow: hidden;
+    color: #000000;
+    font-family: Verdana;
+    text-align: left;
+    border-width: 0px;
+    border-style: none;
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
+
+.GridItemRight
+{
+    font-weight: normal;
+    font-size: 8pt;
+    overflow: hidden;
+    color: #000000;
+    font-family: Verdana;
+    text-align: right;
+    border-width: 0px;
+    border-style: none;
+    word-wrap: break-word;
+}
+.SearchGridOperators
+{
+    font-weight: normal;
+    font-size: 8pt;
+    overflow: hidden;
+    color: #000000;
+    font-family: Verdana;
+    text-align: center;
+}
+
+.GridItemAlternating
+{
+    font-weight: normal;
+    font-size: 8pt;
+    overflow: hidden;
+    color: #000000;
+    font-family: Verdana;
+    text-align: left;
+    background: #f5f5f5;
+}
+.GridSearchWarning
+{
+    font-weight: normal;
+    font-size: 8pt;
+    color: #000000;
+    font-family: Verdana;
+    text-align: left;
+}
+
+
+.GridPageHeaderLink
+{
+    font-weight: normal;
+    font-size: 8pt;
+    background-position-y: bottom;
+    background-image: url(images/partgradp.gif);
+    color: #808080;
+    background-repeat: repeat-x;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+    height: 22px;
+    text-align: right;
+    text-decoration: none;
+}
+
+a.GridPageHeaderLink
+{
+    font-weight: normal;
+    font-size: 8pt;
+    color: #808080;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+    text-align: right;
+    text-decoration: none;
+}
+
+a.GridPageHeaderLink:hover
+{
+    text-decoration: underline;
+    font-size: 8pt;
+    color: #808080;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+}
+a.GridPageHeaderLink:active
+{
+    font-weight: normal;
+    font-size: 8pt;
+    color: #808080;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+    text-decoration: none;
+}
+a.GridPageHeaderLink[disabled], a.GridPageHeaderLink:hover[disabled]
+{
+    font-weight: normal;
+    font-size: 8pt;
+    color: #7F7F7F;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+    text-decoration: none;
+}
+.MediumPageItem
+{
+    font-weight: normal;
+    font-size: 10pt;
+    color: #003399;
+    font-family: Verdana;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.PageItem
+{
+    font-weight: normal;
+    font-size: 8pt;
+    color: #003399;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.PageNavigationLink
+{
+    font-weight: normal;
+    font-size: 8pt;
+    color: #003399;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+    text-align: left;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.DataGridFixedHeader
+{
+    position: relative;
+    top: expression(this.offsetParent.scrollTop);
+    background-color: #FFFFFF;
+    font-weight: normal;
+    font-size: 8pt;
+    color: #808080;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+    text-align: left;
+    text-decoration: none;
+}
+
+.GridHeaderLink
+{
+    font-weight: normal;
+    font-size: 8pt;
+    color: #808080;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+    text-align: left;
+    text-decoration: none;
+}
+
+a.GridHeaderLink
+{
+    font-weight: normal;
+    font-size: 8pt;
+    color: #808080;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+    text-align: left;
+    text-decoration: none;
+}
+
+a.GridHeaderLink:hover
+{
+    text-decoration: underline;
+    font-weight: normal;
+    font-size: 8pt;
+    color: #808080;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+}
+a.GridHeaderLink:active
+{
+    font-weight: normal;
+    font-size: 8pt;
+    color: #808080;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+    text-decoration: none;
+}
+a.GridHeaderLink[disabled], a.GridHeaderLink:hover[disabled]
+{
+    font-weight: normal;
+    font-size: 8pt;
+    color: #7F7F7F;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+    text-decoration: none;
+}
+
+a.GridItemLink
+{
+    font-weight: normal;
+    font-size: 8pt;
+    color: #003399;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+    text-align: left;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+a.GridItemLink:hover
+{
+    text-decoration: underline;
+    font-size: 8pt;
+    color: #003399;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+}
+
+a.GridItemLink:active
+{
+    font-weight: normal;
+    font-size: 8pt;
+    color: #003399;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+    text-decoration: none;
+}
+
+a.GridItemLink[disabled], a.GridItemLink:hover[disabled]
+{
+    font-weight: normal;
+    font-size: 8pt;
+    color: #7F7F7F;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+    text-decoration: none;
+}
+
+a.GridHeaderImageLink
+{
+    text-decoration: none;
+    color: #808080;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+    font-weight: normal;
+}
+
+a.GridHeaderImageLink:visited
+{
+    text-decoration: none;
+    color: #808080;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+}
+
+a.GridHeaderImageLink:hover
+{
+    text-decoration: underline;
+    color: #808080;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+}
+
+a.GridHeaderImageLink[disabled], a.GridHeaderImageLink:hover[disabled]
+{
+    text-decoration: none;
+    color: #7F7F7F;
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+}
