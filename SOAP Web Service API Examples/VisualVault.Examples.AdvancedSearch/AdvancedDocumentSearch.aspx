@@ -1,16 +1,15 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Ui/MasterPages/DocumentSearch.Master"
     AutoEventWireup="true" CodeBehind="AdvancedDocumentSearch.aspx.cs" Inherits="VisualVault.Examples.AdvancedSearch.AdvancedDocumentSearch"
     Theme="Blue" %>
+<%@ Import Namespace="VVRuntime.VisualVault.Library.Documents" %>
 
-<%@ Import Namespace="VVRuntime.Library.Documents" %>
-<%@ Register Assembly="VisualVault.Examples.AdvancedSearch" Namespace="VisualVault.Examples.AdvancedSearch.DataAccess" TagPrefix="vv" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <fieldset>
         <legend><span class="subtitle">Advanced Document Search Example</span></legend>
         <div>
-            <table cellpadding="5" cellspacing="5">
+            <table>
                 <tr>
                     <td class="FormLabel">
                         Invoice#
@@ -81,7 +80,7 @@
                 <tr>
                     <td>
                     </td>
-                    <td align="right">
+                    <td>
                         <asp:Button runat="server" ID="btnSearch" Text="Search as Admin" OnClick="BtnSearchClick" />
                         <br />
                         <br />
@@ -91,7 +90,7 @@
                 <tr>
                     <td>
                         &nbsp;</td>
-                    <td align="right">
+                    <td>
                         &nbsp;</td>
                 </tr>
                 <tr>

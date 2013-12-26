@@ -1,0 +1,186 @@
+
+html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+body {
+  height: 100%;
+  background-color: #ffffff;
+  line-height: 1.4;
+  margin: 0;
+  padding: 0;
+}
+
+body form {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+html,
+body,
+form,
+button,
+input,
+select,
+textarea {
+  color: #595959;
+  font-size: 14px;
+  font-family: Arial, san-serif;
+}
+
+body.loginBg {
+  margin: 0px;
+  padding: 0px;
+  height: 100%;
+  width: 100%;
+}
+
+body.loginBg form {
+  height: 100%;
+  background: transparent;
+  padding: 0px;
+  position: relative;
+  width: 1200px;
+  margin: 0px auto;
+}
+
+#divLogin {
+  width: 1200px;
+  height: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  position: absolute;
+  bottom: 0px;
+  background: none repeat scroll 0 0 #FFFFFF;
+  /*border: 1px solid rgba(0, 0, 0, 0.1);
+    .RoundedCorners(12px, 12px, 0px, 0px );
+    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.05);*/
+}
+
+a{
+  color: #10529f;
+  text-decoration: none;
+}
+
+
+a:hover{
+    color: #3b5672 !important;
+    text-decoration: underline;
+}
+
+a:visited{
+    color: #10529f;
+    text-decoration: none;
+}
+
+#divLogin .LoginPoweredByLabel,
+#divLogin .LoginLabel {
+  color: #595959;
+  text-align: left;
+  width: 708px;
+  margin: 0px auto;
+  padding: 10px;
+}
+
+.serverMessage {
+  background-color: #A3B2A2;
+  color: #000000;
+  margin: 5px 96px;
+  padding: 10px;
+}
+
+.contentArea .adLoginContainer .login{
+  height: 480px;
+  width: 500px;
+  margin: 0 auto;
+  padding: 0px;
+  text-align: left;
+  color: #595959 !important;
+  -webkit-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  -moz-border-radius-topright: 10px;
+  -moz-border-radius-bottomright: 10px;
+  -moz-border-radius-bottomleft: 10px;
+  border-radius: 10px;
+  border: solid 2px #999999;
+  background: #fff;
+}
+
+.contentArea .adLoginContainer .login input[type=text],
+.contentArea .adLoginContainer .login input[type=password] {
+  font-size: 1.2em;
+}
+
+.contentArea .adLoginContainer .login .loginLogo {
+  top: 25px;
+  left: 50px;
+  position: relative;
+}
+
+.contentArea .adLoginContainer .login .userIcon,
+.contentArea .adLoginContainer .login .loginContent {
+  position: relative;
+  top: 55px;
+  padding: 0px 4px;
+}
+
+.contentArea .adLoginContainer .login .loginfailed {
+  display: block;
+  color: red;
+  left: 117px;
+  position: relative;
+  top: 37px;
+  width: 260px;
+  font-weight: bold;
+}
+
+.contentArea .adLoginContainer .login .loginContent {
+  width: 262px;
+  margin: 0px auto;
+}
+
+.contentArea .adLoginContainer .login .loginContent .loginmessage {
+  font-weight: bold;
+}
+
+.contentArea .adLoginContainer .login .loginContent label {
+  color: #595959;
+  margin-top: 20px;
+  display: inline-block;
+}
+
+.contentArea .adLoginContainer .login .loginContent label:first-child {
+  margin-top: 0px;
+}
+
+.contentArea .adLoginContainer .login .loginContent a,
+.contentArea .adLoginContainer .login .loginContent a:link,
+.contentArea .adLoginContainer .login .loginContent a:visited,
+.contentArea .adLoginContainer .login .loginContent a:active {
+  font-size: 0.9em;
+  display: inline-block;
+  margin: 5px 0;
+  cursor: pointer;
+  color: #595959;
+  text-decoration: none;
+}
+
+.contentArea .adLoginContainer .login .loginContent a:first-child {
+  margin-bottom: 0px;
+}
+
+.contentArea .adLoginContainer .login .loginContent a:hover {
+  text-decoration: underline;
+}
+
+.contentArea .adLoginContainer .login .loginContent .RadButton {
+  border: solid 1px #6f6f6f;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-top: 20px;
+  margin-bottom: 15px;
+}

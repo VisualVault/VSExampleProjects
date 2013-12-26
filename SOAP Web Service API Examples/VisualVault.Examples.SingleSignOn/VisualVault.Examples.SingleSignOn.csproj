@@ -79,11 +79,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Themes\Blue\blue.css" />
+    <Content Include="AspNetSharedCookie.aspx" />
+    <Content Include="examples.css" />
+    <Content Include="ExternalWebApp.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="Images\vv_logo.png" />
+    <Content Include="ImpersonatedApiCalls.aspx" />
+    <Content Include="menu.css" />
     <Content Include="Scripts\jquery-1.4.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.4.1.js" />
     <Content Include="Scripts\jquery-1.4.1.min.js" />
     <Content Include="StartHere.aspx" />
+    <Content Include="UserInterfaceTokenLogin.aspx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -95,13 +102,34 @@
     <Content Include="WebServices\Authentication\LogoutService.asmx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AspNetSharedCookie.aspx.cs">
+      <DependentUpon>AspNetSharedCookie.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AspNetSharedCookie.aspx.designer.cs">
+      <DependentUpon>AspNetSharedCookie.aspx</DependentUpon>
+    </Compile>
     <Compile Include="BusinessLogic\Security\Authentication.cs" />
     <Compile Include="BusinessLogic\Security\FormsAuthHelper.cs" />
     <Compile Include="BusinessLogic\Security\Logout.cs" />
     <Compile Include="BusinessLogic\Security\UserKeyValuePair.cs" />
     <Compile Include="BusinessLogic\Security\UserPrincipalWithRoles.cs" />
+    <Compile Include="ExternalWebApp.aspx.cs">
+      <DependentUpon>ExternalWebApp.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ExternalWebApp.aspx.designer.cs">
+      <DependentUpon>ExternalWebApp.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="ImpersonatedApiCalls.aspx.cs">
+      <DependentUpon>ImpersonatedApiCalls.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ImpersonatedApiCalls.aspx.designer.cs">
+      <DependentUpon>ImpersonatedApiCalls.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StartHere.aspx.cs">
@@ -110,6 +138,13 @@
     </Compile>
     <Compile Include="StartHere.aspx.designer.cs">
       <DependentUpon>StartHere.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UserInterfaceTokenLogin.aspx.cs">
+      <DependentUpon>UserInterfaceTokenLogin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UserInterfaceTokenLogin.aspx.designer.cs">
+      <DependentUpon>UserInterfaceTokenLogin.aspx</DependentUpon>
     </Compile>
     <Compile Include="WebServices\Authentication\AuthenticationService.asmx.cs">
       <DependentUpon>AuthenticationService.asmx</DependentUpon>
@@ -143,12 +178,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>49784</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
+          <IISUrl>http://localhost/VisualVault.Examples.SingleSignOn</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
