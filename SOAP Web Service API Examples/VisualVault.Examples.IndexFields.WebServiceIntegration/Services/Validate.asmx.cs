@@ -34,8 +34,10 @@ namespace VisualVault.Examples.IndexFields.WebServiceIntegration.Services
             string returnMessageSubject;
             string returnMessage;
 
+
             //call the business logic class
             bool response = BusinessLogic.Validation.ValidateIndexFields.Validate(indexFieldList, out returnMessage, out returnMessageTitle, out returnMessageSubject, out returnDataList);
+
 
             //setup return response string array
             //first item in the array must be "true" or "false" which indicates validation passed or failed
