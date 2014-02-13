@@ -31,7 +31,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualVault.Examples.Single
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualVault.Examples.UserImport", "SOAP Web Service API Examples\VisualVault.UserImport\VisualVault.Examples.UserImport.csproj", "{A700B23D-68CA-4B7E-BA01-FC0202E28AC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualVault.Examples.IndexFields.WebServiceIntegration", "VisualVault.Examples.IndexFields.WebServiceIntegration\VisualVault.Examples.IndexFields.WebServiceIntegration.csproj", "{B50B7AE3-B2CD-4D43-BFED-D2CDD3612AAA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualVault.Examples.IndexFields.WebServiceIntegration", "SOAP Web Service API Examples\VisualVault.Examples.IndexFields.WebServiceIntegration\VisualVault.Examples.IndexFields.WebServiceIntegration.csproj", "{B50B7AE3-B2CD-4D43-BFED-D2CDD3612AAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
