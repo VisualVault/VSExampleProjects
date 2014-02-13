@@ -38,11 +38,11 @@
                     <br />
                     <br />
                     <div>
-                        <asp:Label runat="server" AssociatedControlID="txtImpersonatedUserId">User Id to Login via Token:</asp:Label>
+                        <asp:Label ID="Label1" runat="server" AssociatedControlID="txtImpersonatedUserId">User Id to Login via Token:</asp:Label>
                         <asp:TextBox runat="server" ID="txtImpersonatedUserId"></asp:TextBox>
                         <br />
                         <br />
-                        <asp:Label runat="server" AssociatedControlID="txtVisualVaultUrl">VisualVault User Interface URL:</asp:Label>
+                        <asp:Label ID="Label2" runat="server" AssociatedControlID="txtVisualVaultUrl">VisualVault User Interface URL:</asp:Label>
                         <asp:TextBox runat="server" ID="txtVisualVaultUrl" Width="800px"></asp:TextBox>
                         <br />
                         <br />
@@ -50,18 +50,18 @@
                         <asp:TextBox runat="server" ID="txtVisualVaultApiUrl" Width="800px"></asp:TextBox>
                         <br />
                         <br />
-                        <asp:Label ID="Label1" runat="server" AssociatedControlID="txtAdminUserId">Admin User Id:</asp:Label>
+                        <asp:Label ID="Label4" runat="server" AssociatedControlID="txtAdminUserId">Admin User Id:</asp:Label>
                         <asp:TextBox runat="server" ID="txtAdminUserId" ></asp:TextBox>
                         <br />
                         <br />
-                        <asp:Label ID="Label2" runat="server" AssociatedControlID="txtAdminPassword">Admin Password:</asp:Label>
+                        <asp:Label ID="Label5" runat="server" AssociatedControlID="txtAdminPassword">Admin Password:</asp:Label>
                         <asp:TextBox runat="server" ID="txtAdminPassword" TextMode="Password" ></asp:TextBox>
                         <br />
                         <br />
                         <asp:Button ID="btnGetLoginToken" runat='server' Text="Build Token Login URL" OnClick="BtnBuildTokenLoginUrl" />
                         <br />
                         <br />
-                        <asp:Label ID="Label4" runat="server" AssociatedControlID="txtTokenLoginUrl">Token Login URL:</asp:Label>
+                        <asp:Label ID="Label6" runat="server" AssociatedControlID="txtTokenLoginUrl">Token Login URL:</asp:Label>
                         <asp:TextBox runat="server" ID="txtTokenLoginUrl" Width="1000px"></asp:TextBox>
                         <br />
                         <br />

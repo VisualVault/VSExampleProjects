@@ -30,13 +30,13 @@ namespace VisualVault.Examples.SingleSignOn
                 txtVisualVaultApiUrl.Text = vaultUiUrl;
             }
 
-            if(string.IsNullOrEmpty(txtAdminUserId.Text))
+            if (string.IsNullOrEmpty(txtAdminUserId.Text))
             {
                 var adminUserID = WebConfigurationManager.AppSettings["vVUserID"];
                 txtAdminUserId.Text = adminUserID;
             }
 
-            if(string.IsNullOrEmpty(txtAdminPassword.Text))
+            if (string.IsNullOrEmpty(txtAdminPassword.Text))
             {
                 var adminPassword = WebConfigurationManager.AppSettings["vVPassword"];
                 txtAdminPassword.Text = adminPassword;
