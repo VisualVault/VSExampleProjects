@@ -42,7 +42,7 @@ namespace VisualVault.Forms.Import.BusinessLogic
                 if (_sourceFormDashboard != null)
                 {
                     var dt = _sourceFormDashboard.GetExportDataAsDataTable();
-
+                    
                     _rowCount = dt.Rows.Count;
 
                     var statusMessage = string.Format("Starting export of {0} forms...", _rowCount);

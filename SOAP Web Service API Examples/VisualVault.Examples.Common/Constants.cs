@@ -16,10 +16,11 @@ namespace VisualVault.Examples.Common
 
         //URL of a VisualVault Instance
         //Example:  https://demo.visualvault.com/app/CustomerName/DatabaseName
-        public static string SoapApiServerUrl = "https://demo.visualvault.com/app/tod/main";
-
-
-        public static string UserId = "demo.config";
-        public static string Password = "p";
+        //public static string SoapApiServerUrl = "https://www.grmorc.com/App/CityMontereyPark/Main";
+        public static string SoapApiServerUrl = "https://demo.visualvault.com/app/CustomerName/DatabaseName";
+        public static string SoapApiTargetServerUrl = "https://demo.visualvault.com/app/CustomerName/DatabaseName";
+        
+        public static string UserId = "";
+        public static string Password = "";
     }
 }

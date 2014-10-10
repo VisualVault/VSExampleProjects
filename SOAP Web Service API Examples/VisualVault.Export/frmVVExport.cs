@@ -6,8 +6,12 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Linq;
+using VVRuntime.Instances;
+using VVRuntime.Instances.Customers;
+using VVRuntime.Instances.Users;
 using VVRuntime.VisualVault;
 using VVRuntime.VisualVault.Common;
 using VVRuntime.VisualVault.Library;
@@ -23,6 +27,33 @@ namespace VisualVault.Examples.Export
     /// </summary>
     public partial class FrmVvExport : Form, ChunkingCallback
     {
+        public static DocumentLibrary SourceLibrary;
+        public static DocumentLibrary TargetLibrary;
+
+        public Vault SourceVault;
+        public Vault TargetVault;
+
+        public InstanceApi SourceInstance;
+        public InstanceApi TargetInstance;
+
+        private DocumentCollection _docColl;
+
+        private DataSet _dsErrorLog;
+        private DataView _dvErrorLog;
+
+        private int _exportedDocumentCount;
+        private int _exportedFolderCount;
+        private string _fsFolderPath = "";
+        private Document _selectedDocument;
+        private Folder _selectedFolder;
+        private Guid _sourceSelectedFolderId;
+        private Folder _targetVisualVaultFolder;
+
+        private List<Group> _sourceVaultGroupList;
+
+        private CancellationTokenSource _tokenSource;
+        private CancellationToken _cancellationToken;
+
         public FrmVvExport()
         {
             //
@@ -43,8 +74,6 @@ namespace VisualVault.Examples.Export
             {
                 Invoke(new MethodInvoker(() => lblProgress.Visible = true));
             }
-
-
 
             int stepSize = PROGRESSBARMAX;
             if (chunkCount > 0)
@@ -126,8 +155,6 @@ namespace VisualVault.Examples.Export
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-
-
             AuthenticateSourceUser(txtServerURL.Text, txtUserID.Text, txtPassword.Text);
 
             if (SourceLibrary != null)
@@ -138,8 +165,6 @@ namespace VisualVault.Examples.Export
             {
                 MessageBox.Show("You are not logged in");
             }
-
-
         }
 
 
@@ -263,32 +288,78 @@ namespace VisualVault.Examples.Export
             _exportedDocumentCount = 0;
             _exportedFolderCount = 0;
 
+            _tokenSource = new CancellationTokenSource();
+            _cancellationToken = _tokenSource.Token;
+
             if (SourceLibrary != null)
             {
                 if (TargetVault != null)
                 {
-                    if (_selectedFolder != null)
+                    //get list of the source folders to copy
+                    List<Folder> sourceFolderList = new List<Folder>();
+
+                    if (!chkCopyFromDocumentLibraryRoot.Checked)
                     {
-                        if (_targetVisualVaultFolder != null)
+                        if (_selectedFolder != null)
                         {
-                            //export all documents found in the source folder
+                            sourceFolderList.Add(_selectedFolder);
+                        }
+                    }
+                    else
+                    {
+                        var topLevelFolders = SourceVault.DefaultStore.Library.GetTopLevelFolders();
+
+                        sourceFolderList.AddRange(topLevelFolders.Cast<Folder>());
+                    }
+
+                    bool copyToDocumentLibraryRoot = chkCopyToDocumentLibraryRoot.Checked;
+
+                    if (sourceFolderList.Count > 0)
+                    {
+                        if (_targetVisualVaultFolder != null || copyToDocumentLibraryRoot)
+                        {
                             bool bRecursive = chkFolderRecursive.Checked;
 
-                            Thread t = new System.Threading.Thread(delegate()
-                                                                                        {
-                                                                                            ExportFolderToTargetUrl(_selectedFolder, _targetVisualVaultFolder, bRecursive);
+                            TaskFactory taskFactory = new TaskFactory(_cancellationToken);
 
-                                                                                            MessageBox.Show("Processed " + _exportedFolderCount + " folders and " + _exportedDocumentCount + " documents");
+                            taskFactory.StartNew(
+                                delegate
+                                {
+                                    Invoke(new MethodInvoker(() => btnCancel.Enabled = true));
 
-                                                                                            if (InvokeRequired)
-                                                                                            {
-                                                                                                Invoke(new MethodInvoker(() => pbProgress.Value = 0));
-                                                                                                Invoke(new MethodInvoker(() => pbProgress.Visible = false));
-                                                                                                Invoke(new MethodInvoker(() => lblProgress.Text = ""));
-                                                                                            }
+                                    Invoke(new MethodInvoker(() => pbProgress.Value = 0));
+                                    Invoke(new MethodInvoker(() => pbProgress.Visible = false));
+                                    Invoke(new MethodInvoker(() => lblProgress.Text = ""));
 
-                                                                                        });
-                            t.Start();
+                                    Folder targetFolder = _targetVisualVaultFolder;
+
+                                    //problem with the instance API running in SSL mode (wcf binding),skipping this for now
+                                    //SynchronizeTargetVaultUsers();
+
+                                    foreach (Folder sourceFolder in sourceFolderList)
+                                    {
+                                        if (!_cancellationToken.IsCancellationRequested)
+                                        {
+                                            if (copyToDocumentLibraryRoot)
+                                            {
+                                                targetFolder =
+                                                    TargetLibrary.FindFolderByPath(sourceFolder.FolderPath) ??
+                                                    TargetLibrary.NewFolder(sourceFolder.Name, sourceFolder.Description);
+                                            }
+
+                                            ExportFolderToTargetUrl(sourceFolder, targetFolder, bRecursive);
+                                        }
+                                        else
+                                        {
+                                            string updateText = "Copying cancelled at path " + sourceFolder.FolderPath;
+
+                                            var updateText1 = updateText;
+                                            Invoke(new MethodInvoker(() => lblProgress.Text = updateText1));
+                                            Invoke(new MethodInvoker(() => btnCancel.Enabled = false));
+                                        }
+                                    }
+
+                                }, _cancellationToken);
                         }
                         else
                         {
@@ -309,8 +380,6 @@ namespace VisualVault.Examples.Export
             {
                 MessageBox.Show("You are not logged in to the source URL");
             }
-
-
         }
 
 
@@ -319,7 +388,7 @@ namespace VisualVault.Examples.Export
             _exportedDocumentCount = 0;
             _exportedFolderCount = 0;
 
-            if (!(SourceLibrary == null))
+            if (SourceLibrary != null)
             {
                 if (TargetVault != null)
                 {
@@ -687,7 +756,7 @@ namespace VisualVault.Examples.Export
             InitErrorLogDataGrid();
 
             txtServerURL.Text = Constants.SoapApiServerUrl;
-            txtTargetServerURL.Text = Constants.SoapApiServerUrl;
+            txtTargetServerURL.Text = Constants.SoapApiTargetServerUrl;
 
             txtUserID.Text = Constants.UserId;
             txtPassword.Text = Constants.Password;
@@ -718,6 +787,15 @@ namespace VisualVault.Examples.Export
 
             SourceVault = VVRuntime.VisualVaultLogin.Login(serverUrl, userId, password, Constants.DeveloperKey, Constants.DeveloperSecret, Constants.ProductId);
 
+            Version sourceVaultVersion = SourceVault.Configurations.GetVisualVaultVersion();
+
+            if (sourceVaultVersion.Major >= 4)
+            {
+                //instance API only available in VV 4.0+
+                SourceInstance = VVRuntime.InstanceLogin.Login(serverUrl, userId, password, Constants.DeveloperKey,
+                    Constants.DeveloperSecret, Constants.ProductId);
+            }
+
             if (SourceVault != null)
             {
                 var user = SourceVault.Sites.GetUser(userId);
@@ -734,6 +812,7 @@ namespace VisualVault.Examples.Export
                 {
                     lblAuthStatus.Text = "Logged in";
                     lblAuthStatus.ForeColor = Color.Green;
+                    groupBoxSourceVault.Text = string.Format("Copy from {0}", txtServerURL.Text);
 
                 }));
 
@@ -744,6 +823,7 @@ namespace VisualVault.Examples.Export
                 {
                     lblAuthStatus.Text = "Login Failed.  Check UserID \\ Password";
                     lblAuthStatus.ForeColor = Color.Red;
+                    groupBoxSourceVault.Text = "Copy from";
 
                 }));
             }
@@ -759,6 +839,15 @@ namespace VisualVault.Examples.Export
         public void AuthenticateTargetUser(string serverUrl, string userId, string password)
         {
             TargetVault = VVRuntime.VisualVaultLogin.Login(serverUrl, userId, password, Constants.DeveloperKey, Constants.DeveloperSecret, Constants.ProductId);
+
+            Version targetVaultVersion = TargetVault.Configurations.GetVisualVaultVersion();
+
+            if (targetVaultVersion.Major >= 4)
+            {
+                //instance API only available in VV 4.0+
+                TargetInstance = VVRuntime.InstanceLogin.Login(serverUrl, userId, password, Constants.DeveloperKey, Constants.DeveloperSecret, Constants.ProductId);
+            }
+
             if (TargetVault != null)
             {
                 MethodInvoker method = delegate
@@ -819,7 +908,7 @@ namespace VisualVault.Examples.Export
             }
 
 
-            if (!(SourceVault == null))
+            if (SourceVault != null)
             {
                 FolderCollection folderCollection = SourceVault.DefaultStore.Library.GetTopLevelFolders();
                 foreach (Folder folder in folderCollection)
@@ -852,11 +941,11 @@ namespace VisualVault.Examples.Export
                                                   node = (VvTreeNode)TreeView1.Nodes[0];
                                                   if (node != null)
                                                   {
-                                                      TreeView1.SelectedNode = node;
-                                                      LoadChildTreeNodes(node);
-                                                      _selectedFolder = SourceVault.DefaultStore.Library.GetFolder(node.NodeID);
+                                                      //TreeView1.SelectedNode = node;
+                                                      //LoadChildTreeNodes(node);
+                                                      //_selectedFolder = SourceVault.DefaultStore.Library.GetFolder(node.NodeID);
 
-                                                      node.Collapse();
+                                                      //node.Collapse();
                                                   }
                                               }
                                           };
@@ -976,11 +1065,11 @@ namespace VisualVault.Examples.Export
             bool isNamingConventionEnabled = false;
             if (_selectedFolder == null)
             {
-                lblFolderPath.Text = "No folder selected";
+                txtSourceFolderPath.Text = "Select folder using tree view above";
             }
             else
             {
-                lblFolderPath.Text = _selectedFolder.FolderPath;
+                txtSourceFolderPath.Text = _selectedFolder.FolderPath;
 
                 if (_selectedFolder.HasNamingConventions)
                 {
@@ -1128,19 +1217,48 @@ namespace VisualVault.Examples.Export
         {
             try
             {
+                if (_cancellationToken.IsCancellationRequested)
+                {
+                    string updateText1 = "Copying cancelled at path " + sourceFolder.FolderPath;
+
+                    Invoke(new MethodInvoker(() => lblProgress.Text = updateText1));
+                    Invoke(new MethodInvoker(() => btnCancel.Enabled = false));
+
+                    return;
+                }
+
+                string updateText = "Copying folder from " + sourceFolder.FolderPath + @" to " + targetFolder.FolderPath;
+
+                if (InvokeRequired)
+                {
+                    var updateText1 = updateText;
+                    Invoke(new MethodInvoker(() => lblProgress.Text = updateText1));
+                }
+
                 //make sure target folder has all index fields defined in the source folder
-                if (chkIncludeIndexFields.Checked)
+                bool createFolderIndexFields = false;
+                Invoke(new MethodInvoker(() => createFolderIndexFields = chkIncludeIndexFields.Checked));
+
+                if (createFolderIndexFields)
+                {
                     CreateFolderIndexFields(sourceFolder, targetFolder);
+                }
 
                 //copy source folder naming conventions
-                if (chkCopyNamingConventions.Checked)
+                bool copyNamingConventions = false;
+                Invoke(new MethodInvoker(() => copyNamingConventions = chkCopyNamingConventions.Checked));
+
+                if (copyNamingConventions)
                 {
-                    //NamingConventions targetNamingConventions = sourceFolder.DCNamingConvention;
-                    //targetFolder.UpdateNamingRules(targetNamingConventions);
+                    NamingConventions targetNamingConventions = sourceFolder.DCNamingConvention;
+                    targetFolder.UpdateNamingRules(targetNamingConventions);
                 }
 
                 //copy source folder record retention rules
-                if (chkCopyRecordRetention.Checked)
+                bool copyRecordRetention = false;
+                Invoke(new MethodInvoker(() => copyRecordRetention = chkCopyRecordRetention.Checked));
+
+                if (copyRecordRetention)
                 {
                     RecordRetention targetRecordRetentionRules = sourceFolder.DCRecordRention;
                     targetFolder.UpdateRetentionPlan(targetRecordRetentionRules);
@@ -1149,34 +1267,84 @@ namespace VisualVault.Examples.Export
                 //remove system generated index fields from the target folder
                 RemoveFolderDefaultIndexFields(targetFolder);
 
+                //copy folder security
+                bool copyFolderSecurity = false;
+                Invoke(new MethodInvoker(() => copyFolderSecurity = chkCopyGroups.Checked));
+
+                if (copyFolderSecurity)
+                {
+                    updateText = "Copying folder security from " + sourceFolder.FolderPath + @" to " + targetFolder.FolderPath;
+
+                    var updateText1 = updateText;
+                    Invoke(new MethodInvoker(() => lblProgress.Text = updateText1));
+
+                    _sourceVaultGroupList = new List<Group>();
+
+                    CopyFolderSecurity(sourceFolder, targetFolder);
+
+                    if (chkAddGroupMembers.Checked)
+                    {
+                        SynchronizeTargetVaultGroupMembers();
+                    }
+                }
+
                 //iterate through all the documents in the source server's selected VisualVault folder
                 //and check them into the target VisualVault server's target folder.
 
+                updateText = "Copying folder documents " + sourceFolder.FolderPath + @" to " + targetFolder.FolderPath;
+
+                if (InvokeRequired)
+                {
+                    var updateText1 = updateText;
+                    Invoke(new MethodInvoker(() => lblProgress.Text = updateText1));
+                }
+
+                if (_cancellationToken.IsCancellationRequested)
+                {
+                    updateText = "Copying cancelled at path " + sourceFolder.FolderPath;
+
+                    var updateText1 = updateText;
+                    Invoke(new MethodInvoker(() => lblProgress.Text = updateText1));
+                    Invoke(new MethodInvoker(() => btnCancel.Enabled = false));
+
+                    return;
+                }
+
                 foreach (Document sourceDoc in sourceFolder.GetDocuments())
                 {
-                    //try up to five times to export a document if there was a failure
-                    bool exportSuccessfull = false;
-                    var i = 0;
-
-                    while (!exportSuccessfull && i <= 5)
+                    if (!_cancellationToken.IsCancellationRequested)
                     {
-                        exportSuccessfull = ExportDocumentToTargetUrl(sourceFolder, sourceDoc, targetFolder);
-                        if (!exportSuccessfull)
-                        {
-                            SourceVault.ReValidateLogin();
-                            TargetVault.ReValidateLogin();
-                        }
+                        //try up to five times to export a document if there was a failure
+                        bool exportSuccessfull = false;
+                        var i = 0;
 
-                        i++;
+                        while (!exportSuccessfull && i <= 5)
+                        {
+                            exportSuccessfull = ExportDocumentToTargetUrl(sourceFolder, sourceDoc, targetFolder);
+                            if (!exportSuccessfull)
+                            {
+                                SourceVault.ReValidateLogin();
+                                TargetVault.ReValidateLogin();
+                            }
+
+                            i++;
+                        }
+                    }
+                    else
+                    {
+                        updateText = "Copying cancelled at path " + sourceFolder.FolderPath;
+
+                        var updateText1 = updateText;
+                        Invoke(new MethodInvoker(() => lblProgress.Text = updateText1));
+                        Invoke(new MethodInvoker(() => btnCancel.Enabled = false));
+
+                        break;
                     }
                 }
 
                 _exportedFolderCount += 1;
 
-                if (InvokeRequired)
-                {
-                    Invoke(new MethodInvoker(() => lblRunningTotals.Text = "Processed " + _exportedFolderCount + " folders and " + _exportedDocumentCount + " documents"));
-                }
+                Invoke(new MethodInvoker(() => lblRunningTotals.Text = "Processed " + _exportedFolderCount + " folders and " + _exportedDocumentCount + " documents"));
 
                 Application.DoEvents();
 
@@ -1215,14 +1383,23 @@ namespace VisualVault.Examples.Export
                             {
                                 //create new child folder by appending a new guid value to the end of the source folder's name
                                 string exMessage = ex.Message;
-                                targetChildFolder =
-                                    targetFolder.NewChildFolder(sourceChildFolder.Name + "-" + Guid.NewGuid(),
+                                targetChildFolder = targetFolder.NewChildFolder(sourceChildFolder.Name + "-" + Guid.NewGuid(),
                                                                 sourceChildFolder.Description, false, false);
 
                                 //temporary workaround to populate the new folder's path
-                                targetChildFolder =
-                                    TargetVault.DefaultStore.Library.GetFolder(targetChildFolder.FolderID);
+                                targetChildFolder = TargetVault.DefaultStore.Library.GetFolder(targetChildFolder.FolderID);
                             }
+                        }
+
+                        if (_cancellationToken.IsCancellationRequested)
+                        {
+                            updateText = "Copying cancelled at path " + sourceFolder.FolderPath;
+
+                            var updateText1 = updateText;
+                            Invoke(new MethodInvoker(() => lblProgress.Text = updateText1));
+                            Invoke(new MethodInvoker(() => btnCancel.Enabled = false));
+
+                            break;
                         }
 
                         ExportFolderToTargetUrl(sourceChildFolder, targetChildFolder, true);
@@ -1391,6 +1568,7 @@ namespace VisualVault.Examples.Export
 
         }
 
+
         private void SaveSingleDocumentFile(Document documentRevision, string saveToPath)
         {
             try
@@ -1478,7 +1656,8 @@ namespace VisualVault.Examples.Export
             }
         }
 
-        private string CleanupForFileName(string input)
+
+        private static string CleanupForFileName(string input)
         {
             return input.Replace(@"/", "-").Replace(@"\", "-").Replace("..", ".");
         }
@@ -1515,7 +1694,12 @@ namespace VisualVault.Examples.Export
                     //get the target folder
                     _targetVisualVaultFolder = TargetVault.DefaultStore.Library.GetFolder(frmFolderSelect.FolderID);
 
-                    lblTargetFolderPath.Text = _targetVisualVaultFolder.FolderPath;
+                    if (_targetVisualVaultFolder != null)
+                    {
+                        txtTargetFolderPath.Text = _targetVisualVaultFolder.FolderPath;
+
+                        chkCopyToDocumentLibraryRoot.Checked = false;
+                    }
                 }
             }
             else
@@ -1560,10 +1744,9 @@ namespace VisualVault.Examples.Export
                                 catch (Exception)
                                 {
                                     //if no index field found create one
-                                    tempIndexField = targetFolderIndexFields.NewFolderIndexField();
+                                    tempIndexField = targetFolderIndexFields.NewFolderIndexField(sourceIndexField.FolderIndexFieldType);
                                     tempIndexField.Name = sourceIndexField.Name;
                                     tempIndexField.Description = sourceIndexField.Description;
-
                                     targetFolderIndexFields.AddFolderIndexField(tempIndexField);
                                 }
                             }
@@ -1579,6 +1762,254 @@ namespace VisualVault.Examples.Export
         }
 
 
+        private void CopyFolderSecurity(Folder sourceFolder, Folder targetFolder)
+        {
+            try
+            {
+
+                bool createUsersGroups = false;
+                Invoke(new MethodInvoker(() => createUsersGroups = chkCreateGroups.Checked));
+
+                SecurityMemberCollection sourceFolderSecurityMembers = sourceFolder.GetSecurityMembers();
+
+                SecurityMemberCollection targetFolderMemberCollection = targetFolder.GetSecurityMembers();
+
+                foreach (SecurityMember securityMember in sourceFolderSecurityMembers)
+                {
+                    //if (securityMember.MemberName == "Configuration Administrator")
+                    //{
+                    //    continue;
+                    //}
+
+                    switch (securityMember.MemberType)
+                    {
+                        case MemberType.User:
+
+                            //User targetVaultuser = null;
+
+                            //try
+                            //{
+                            //    targetVaultuser = TargetVault.Sites.GetUser(securityMember.MemberName);
+                            //}
+                            //catch (Exception ex)
+                            //{
+                            //    //expected
+                            //    if (createUsersGroups)
+                            //    {
+                            //        string updateText = string.Format("User {0} not found in target vault",
+                            //            securityMember.MemberName);
+
+                            //        var updateText1 = updateText;
+                            //        Invoke(new MethodInvoker(() => lblProgress.Text = updateText1));
+                            //    }
+                            //}
+
+                            //var sourceVaultUser = SourceVault.Sites.GetUser(securityMember.MemberID);
+
+                            //if (targetVaultuser == null && createUsersGroups && sourceVaultUser != null)
+                            //{
+                            //    Site targetVaultHomeSite = TargetVault.Sites.GetAllSites()["Home"];
+                            //    if (targetVaultHomeSite != null)
+                            //    {
+                            //        targetVaultuser = targetVaultHomeSite.NewUser(sourceVaultUser.UserID, sourceVaultUser.FirstName, sourceVaultUser.MiddleInitial,
+                            //            sourceVaultUser.LastName, sourceVaultUser.Email, "password123");
+
+                            //        string updateText = string.Format("User {0} created in target vault", targetVaultuser.UserID);
+
+                            //        var updateText1 = updateText;
+                            //        Invoke(new MethodInvoker(() => lblProgress.Text = updateText1));
+                            //    }
+                            //}
+
+                            //if (targetVaultuser != null)
+                            //{
+                            //    SecurityMember sourceFolderSecurityMember = securityMember;
+                            //    if (targetFolderMemberCollection.Cast<SecurityMember>().All(targetFolderSecurityMember => targetFolderSecurityMember.MemberName != sourceFolderSecurityMember.MemberName && targetFolderSecurityMember.MemberType == MemberType.User))
+                            //    {
+                            //        //add source folder user to target folder
+                            //        targetFolderMemberCollection.AddMember(targetVaultuser, sourceFolderSecurityMember.Role);
+                            //    }
+                            //}
+
+                            break;
+                        case MemberType.Group:
+
+                            Group targetVaultGroup = null;
+
+                            try
+                            {
+                                //targetVaultGroup = TargetVault.Sites.GetGroup(securityMember.MemberName);
+                                Site homeSite = TargetVault.Sites.GetAllSites()["Home"];
+                                targetVaultGroup = homeSite.GetGroup(securityMember.MemberName);
+                            }
+                            catch (Exception ex)
+                            {
+                                //expected
+                                if (createUsersGroups)
+                                {
+                                    string updateText = string.Format("Group {0} not found in target vault", securityMember.MemberName);
+
+                                    var updateText1 = updateText;
+                                    Invoke(new MethodInvoker(() => lblProgress.Text = updateText1));
+                                }
+                            }
+
+                            var sourceVaultGroup = SourceVault.Sites.GetGroup(securityMember.MemberID);
+
+                            if (targetVaultGroup == null && createUsersGroups && sourceVaultGroup != null)
+                            {
+                                Site targetVaultHomeSite = TargetVault.Sites.GetSite("Home");
+                                if (targetVaultHomeSite != null)
+                                {
+                                    targetVaultGroup = targetVaultHomeSite.NewGroup(sourceVaultGroup.Name,
+                                        sourceVaultGroup.Description);
+
+                                    string updateText = string.Format("Group {0} created in target vault", targetVaultGroup.Name);
+
+                                    var updateText1 = updateText;
+                                    Invoke(new MethodInvoker(() => lblProgress.Text = updateText1));
+                                }
+                            }
+
+                            if (targetVaultGroup != null)
+                            {
+                                SecurityMember sourceFolderSecurityMember = securityMember;
+                                if (!targetFolderMemberCollection.Cast<SecurityMember>().Any(targetFolderSecurityMember => targetFolderSecurityMember.MemberName == sourceFolderSecurityMember.MemberName && targetFolderSecurityMember.MemberType == MemberType.Group))
+                                {
+                                    //add source folder group to target folder
+                                    targetFolderMemberCollection.AddMember(targetVaultGroup.GroupID, MemberType.Group, sourceFolderSecurityMember.Role);
+                                }
+                            }
+
+                            if (sourceVaultGroup != null)
+                            {
+                                if (!_sourceVaultGroupList.Contains(sourceVaultGroup))
+                                {
+                                    _sourceVaultGroupList.Add(sourceVaultGroup);
+                                }
+                            }
+
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLogEntry("Exception in CopyFolderSecurity: " + ex.Message,
+                              "Source Folder: " + sourceFolder.FolderPath);
+            }
+        }
+
+
+        private void SynchronizeTargetVaultGroupMembers()
+        {
+            bool addGroupMembers = false;
+            Invoke(new MethodInvoker(() => addGroupMembers = chkAddGroupMembers.Checked));
+
+            Site targetVaultHomeSite = TargetVault.Sites.GetAllSites()["Home"];
+
+            if (_sourceVaultGroupList != null && _sourceVaultGroupList.Count > 0 && targetVaultHomeSite != null)
+            {
+                if (addGroupMembers)
+                {
+                    foreach (Group sourceVaultGroup in _sourceVaultGroupList)
+                    {
+                        var targetVaultGroup = targetVaultHomeSite.GetGroup(sourceVaultGroup.Name);
+
+                        if (targetVaultGroup != null)
+                        {
+                            foreach (GroupMember sourceVaultGroupMember in sourceVaultGroup.GroupMembers)
+                            {
+                                //if target vault group does not contain source vault group member then add
+                                if (targetVaultGroup.GroupMembers.Cast<GroupMember>().All(gm => gm.UserID != sourceVaultGroupMember.UserID))
+                                {
+                                    User targetVaultuser = null;
+
+                                    try
+                                    {
+                                        targetVaultuser = TargetVault.Sites.GetUser(sourceVaultGroupMember.UserID);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        //expected if user does not exist
+                                        string updateText = string.Format("Creating user {0} not found in target vault", sourceVaultGroupMember.UserID);
+
+                                        var updateText1 = updateText;
+                                        Invoke(new MethodInvoker(() => lblProgress.Text = updateText1));
+
+                                        var sourceVaultUser = SourceVault.Sites.GetUser(sourceVaultGroupMember.UsID);
+
+                                        targetVaultuser = targetVaultHomeSite.NewUser(sourceVaultUser.UserID, sourceVaultUser.FirstName, sourceVaultUser.MiddleInitial,
+                                        sourceVaultUser.LastName, sourceVaultUser.Email, "password123");
+                                    }
+
+                                    if (targetVaultuser != null)
+                                    {
+                                        targetVaultGroup.AddUser(targetVaultuser);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        
+        private void SynchronizeTargetVaultUsers()
+        {
+            if (SourceInstance != null && TargetInstance != null && SourceVault != null && TargetVault != null)
+            {
+                List<InstanceUser> sourceVaultCustomerUsers = new List<InstanceUser>();
+
+                List<Customer> sourceVaultCustomers = SourceInstance.Customers.GetAllCustomers();
+
+                List<InstanceUser> targetVaultCustomerUsers = new List<InstanceUser>();
+
+                Customer targetInstanceCustomer = null;
+                
+                foreach (Customer customer in sourceVaultCustomers.Where(instanceCustomer => instanceCustomer.CustomerId.Equals(SourceVault.CustomerId)))
+                {
+                    sourceVaultCustomerUsers = customer.Users.GetAllUsers();
+                    break;
+                }
+                
+                foreach (Customer customer in sourceVaultCustomers.Where(instanceCustomer => instanceCustomer.CustomerId.Equals(TargetVault.CustomerId)))
+                {
+                    targetInstanceCustomer = customer;
+                    targetVaultCustomerUsers = customer.Users.GetAllUsers();
+                    break;
+                }
+
+                foreach (InstanceUser sourceVaultInstanceUser in sourceVaultCustomerUsers)
+                {
+                    if (!targetVaultCustomerUsers.Contains(sourceVaultInstanceUser))
+                    {
+                        if (targetInstanceCustomer != null)
+                        {
+                            var databases = targetInstanceCustomer.Databases.GetAllDatabases();
+
+                            foreach (var database in databases.Where(database => database.Alias == SourceVault.CustomerDatabaseAlias))
+                            {
+                                foreach (InstanceUser sourceVaultCustomerUser in sourceVaultCustomerUsers)
+                                {
+                                    try
+                                    {
+                                        User user = TargetVault.Sites.GetUser(sourceVaultCustomerUser.Username);
+                                    }
+                                    catch (InvalidUserIDException ex)
+                                    {
+                                        database.AddUser(sourceVaultCustomerUser.Username, false);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        
         /// <summary>
         /// Deletes the system generated index fields (User Field 1, User Field 2) from a VisualVault folder
         /// </summary>
@@ -1619,8 +2050,7 @@ namespace VisualVault.Examples.Export
                               "Folder: " + folder.FolderPath);
             }
         }
-
-
+        
         /// <summary>
         /// Copies the values from source document index fields to matching target document index fields
         /// </summary>
@@ -1744,32 +2174,47 @@ namespace VisualVault.Examples.Export
             return new FileInfo(targetFileFullPath);
         }
 
-        #region Variables
-
-        public static DocumentLibrary SourceLibrary;
-        public static DocumentLibrary TargetLibrary;
-
-        public Vault SourceVault;
-        public Vault TargetVault;
-
-        private DocumentCollection _docColl;
-
-        private DataSet _dsErrorLog;
-        private DataView _dvErrorLog;
-
-        private int _exportedDocumentCount;
-        private int _exportedFolderCount;
-        private string _fsFolderPath = "";
-        private Document _selectedDocument;
-        private Folder _selectedFolder;
-        private Guid _sourceSelectedFolderId;
-        private Folder _targetVisualVaultFolder;
-
-        #endregion
+        #region Event Handlers
 
         private void ChkExportAllRevisionsCheckedChanged(object sender, EventArgs e)
         {
             chkUseDocID.Enabled = !chkExportAllRevisions.Checked;
         }
+
+        private void chkLookForExistingDocs_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void chkDocumentLibraryRoot_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkCopyToDocumentLibraryRoot.Checked)
+            {
+                txtTargetFolderPath.Text = "/";
+                _targetVisualVaultFolder = null;
+            }
+        }
+
+        private void chkCopyFromDocumentLibraryRoot_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkCopyFromDocumentLibraryRoot.Checked)
+            {
+                txtSourceFolderPath.Text = "/";
+                _selectedFolder = null;
+            }
+        }
+
+        private void txtSourceFolderPath_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            _tokenSource.Cancel();
+        }
+
+        #endregion
+
     }
 }

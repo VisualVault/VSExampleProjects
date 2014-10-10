@@ -11,7 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{8BE31A29-B44
 		SOAP Web Service API Examples\Lib\Newtonsoft.Json.xml = SOAP Web Service API Examples\Lib\Newtonsoft.Json.xml
 		SOAP Web Service API Examples\Lib\VVFormDefinitions.dll = SOAP Web Service API Examples\Lib\VVFormDefinitions.dll
 		SOAP Web Service API Examples\Lib\VVRuntime.dll = SOAP Web Service API Examples\Lib\VVRuntime.dll
-		SOAP Web Service API Examples\Lib\VVRuntime.pdb = SOAP Web Service API Examples\Lib\VVRuntime.pdb
 		SOAP Web Service API Examples\Lib\VVRuntime.XmlSerializers.dll = SOAP Web Service API Examples\Lib\VVRuntime.XmlSerializers.dll
 	EndProjectSection
 EndProject

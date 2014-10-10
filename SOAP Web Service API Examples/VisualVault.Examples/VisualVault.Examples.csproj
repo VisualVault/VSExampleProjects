@@ -71,11 +71,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="VVRuntime">
-      <HintPath>..\Lib\VVRuntime.dll</HintPath>
-    </Reference>
-    <Reference Include="VVRuntime.XmlSerializers">
-      <HintPath>..\Lib\VVRuntime.XmlSerializers.dll</HintPath>
+    <Reference Include="VVRuntime, Version=4.1.0.0, Culture=neutral, PublicKeyToken=d5afc120814919e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\VSProjects\VisualVault\ClientLibraries\VVRuntime\Main\VVRuntime4\VVRuntime\bin\Debug\VVRuntime.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

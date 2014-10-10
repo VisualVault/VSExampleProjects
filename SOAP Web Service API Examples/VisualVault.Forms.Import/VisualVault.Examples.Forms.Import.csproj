@@ -96,13 +96,12 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="VVRuntime, Version=3.9.3.0, Culture=neutral, PublicKeyToken=d5afc120814919e1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\VVRuntime.dll</HintPath>
+    <Reference Include="VVFormDefinitions">
+      <HintPath>..\Lib\VVFormDefinitions.dll</HintPath>
     </Reference>
-    <Reference Include="VVRuntime.XmlSerializers, Version=3.9.2.0, Culture=neutral, PublicKeyToken=d5afc120814919e1, processorArchitecture=MSIL">
+    <Reference Include="VVRuntime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=d5afc120814919e1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\VVRuntime.XmlSerializers.dll</HintPath>
+      <HintPath>C:\VSProjects\VisualVault\ClientLibraries\VVRuntime\Main\VVRuntime4\VVRuntime\bin\Debug\VVRuntime.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
