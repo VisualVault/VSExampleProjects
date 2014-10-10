@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualVault.Examples.Single
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualVault.Examples.UserImport", "SOAP Web Service API Examples\VisualVault.UserImport\VisualVault.Examples.UserImport.csproj", "{A700B23D-68CA-4B7E-BA01-FC0202E28AC7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualVault.Examples.IndexFields.WebServiceIntegration", "SOAP Web Service API Examples\VisualVault.Examples.IndexFields.WebServiceIntegration\VisualVault.Examples.IndexFields.WebServiceIntegration.csproj", "{B50B7AE3-B2CD-4D43-BFED-D2CDD3612AAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -120,6 +122,16 @@ Global
 		{A700B23D-68CA-4B7E-BA01-FC0202E28AC7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{A700B23D-68CA-4B7E-BA01-FC0202E28AC7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{A700B23D-68CA-4B7E-BA01-FC0202E28AC7}.Release|x86.ActiveCfg = Release|Any CPU
+		{B50B7AE3-B2CD-4D43-BFED-D2CDD3612AAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B50B7AE3-B2CD-4D43-BFED-D2CDD3612AAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B50B7AE3-B2CD-4D43-BFED-D2CDD3612AAA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B50B7AE3-B2CD-4D43-BFED-D2CDD3612AAA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B50B7AE3-B2CD-4D43-BFED-D2CDD3612AAA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B50B7AE3-B2CD-4D43-BFED-D2CDD3612AAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B50B7AE3-B2CD-4D43-BFED-D2CDD3612AAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B50B7AE3-B2CD-4D43-BFED-D2CDD3612AAA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B50B7AE3-B2CD-4D43-BFED-D2CDD3612AAA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B50B7AE3-B2CD-4D43-BFED-D2CDD3612AAA}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -134,5 +146,6 @@ Global
 		{61186FB3-6C53-4874-990C-2FBFFB934212} = {4BAFABBB-95A2-4A24-860F-67D69E5DDDF3}
 		{199BF437-8ED5-430F-B9EC-C713036ECDB9} = {4BAFABBB-95A2-4A24-860F-67D69E5DDDF3}
 		{A700B23D-68CA-4B7E-BA01-FC0202E28AC7} = {4BAFABBB-95A2-4A24-860F-67D69E5DDDF3}
+		{B50B7AE3-B2CD-4D43-BFED-D2CDD3612AAA} = {4BAFABBB-95A2-4A24-860F-67D69E5DDDF3}
 	EndGlobalSection
 EndGlobal
