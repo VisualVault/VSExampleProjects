@@ -70,7 +70,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>VisualVault.Forms.Import.Program</StartupObject>
@@ -99,9 +99,9 @@
     <Reference Include="VVFormDefinitions">
       <HintPath>..\Lib\VVFormDefinitions.dll</HintPath>
     </Reference>
-    <Reference Include="VVRuntime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=d5afc120814919e1, processorArchitecture=MSIL">
+    <Reference Include="VVRuntime, Version=4.1.0.0, Culture=neutral, PublicKeyToken=d5afc120814919e1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\VSProjects\VisualVault\ClientLibraries\VVRuntime\Main\VVRuntime4\VVRuntime\bin\Debug\VVRuntime.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\vsprojects\VisualVault\ClientLibraries\VVRuntime\Main\VVRuntime4\VVRuntime\bin\Debug\VVRuntime.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

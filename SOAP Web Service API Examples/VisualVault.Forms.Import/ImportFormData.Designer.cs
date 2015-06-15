@@ -48,6 +48,11 @@ namespace VisualVault.Forms.Import
             this.label27 = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.txtDateTimeFormat = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.chkAllowUpdate = new System.Windows.Forms.CheckBox();
             this.chkCsvLinesQuoted = new System.Windows.Forms.CheckBox();
             this.chkCsvHeadersQuoted = new System.Windows.Forms.CheckBox();
@@ -83,12 +88,8 @@ namespace VisualVault.Forms.Import
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.txtDateTimeFormat = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
             this.progressBar1 = new VisualVault.Forms.Import.UI.TextProgressBar();
+            this.chkExportRelatedDocs = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox11.SuspendLayout();
@@ -104,20 +105,22 @@ namespace VisualVault.Forms.Import
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Location = new System.Drawing.Point(0, 27);
+            this.tabControl1.Location = new System.Drawing.Point(0, 33);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(544, 416);
+            this.tabControl1.Size = new System.Drawing.Size(725, 512);
             this.tabControl1.TabIndex = 5;
             // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.lblVersion);
             this.tabPage1.Controls.Add(this.groupBox11);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(536, 390);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage1.Size = new System.Drawing.Size(717, 483);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Login";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -125,9 +128,10 @@ namespace VisualVault.Forms.Import
             // lblVersion
             // 
             this.lblVersion.AutoSize = true;
-            this.lblVersion.Location = new System.Drawing.Point(43, 262);
+            this.lblVersion.Location = new System.Drawing.Point(57, 322);
+            this.lblVersion.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(48, 13);
+            this.lblVersion.Size = new System.Drawing.Size(64, 17);
             this.lblVersion.TabIndex = 11;
             this.lblVersion.Text = "Version: ";
             // 
@@ -146,9 +150,11 @@ namespace VisualVault.Forms.Import
             this.groupBox11.Controls.Add(this.label26);
             this.groupBox11.Controls.Add(this.label27);
             this.groupBox11.Controls.Add(this.label29);
-            this.groupBox11.Location = new System.Drawing.Point(46, 38);
+            this.groupBox11.Location = new System.Drawing.Point(61, 47);
+            this.groupBox11.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(387, 221);
+            this.groupBox11.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox11.Size = new System.Drawing.Size(516, 272);
             this.groupBox11.TabIndex = 10;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "Login to VisualVault";
@@ -156,27 +162,30 @@ namespace VisualVault.Forms.Import
             // cboProfiles
             // 
             this.cboProfiles.FormattingEnabled = true;
-            this.cboProfiles.Location = new System.Drawing.Point(70, 24);
+            this.cboProfiles.Location = new System.Drawing.Point(93, 30);
+            this.cboProfiles.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cboProfiles.Name = "cboProfiles";
-            this.cboProfiles.Size = new System.Drawing.Size(297, 21);
+            this.cboProfiles.Size = new System.Drawing.Size(395, 24);
             this.cboProfiles.TabIndex = 17;
             this.cboProfiles.SelectedIndexChanged += new System.EventHandler(this.CboProfilesSelectedIndexChanged);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(25, 32);
+            this.label5.Location = new System.Drawing.Point(33, 39);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(39, 13);
+            this.label5.Size = new System.Drawing.Size(52, 17);
             this.label5.TabIndex = 14;
             this.label5.Text = "Profile:";
             // 
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(23, 164);
+            this.label20.Location = new System.Drawing.Point(31, 202);
+            this.label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(40, 13);
+            this.label20.Size = new System.Drawing.Size(52, 17);
             this.label20.TabIndex = 13;
             this.label20.Text = "Status:";
             // 
@@ -185,18 +194,20 @@ namespace VisualVault.Forms.Import
             this.uxAuthStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.uxAuthStatus.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.uxAuthStatus.Location = new System.Drawing.Point(67, 158);
+            this.uxAuthStatus.Location = new System.Drawing.Point(89, 194);
+            this.uxAuthStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.uxAuthStatus.Name = "uxAuthStatus";
-            this.uxAuthStatus.Size = new System.Drawing.Size(303, 25);
+            this.uxAuthStatus.Size = new System.Drawing.Size(404, 31);
             this.uxAuthStatus.TabIndex = 12;
             this.uxAuthStatus.Text = "Not Logged In";
             this.uxAuthStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // uxAuthCmdLogin
             // 
-            this.uxAuthCmdLogin.Location = new System.Drawing.Point(292, 186);
+            this.uxAuthCmdLogin.Location = new System.Drawing.Point(389, 229);
+            this.uxAuthCmdLogin.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.uxAuthCmdLogin.Name = "uxAuthCmdLogin";
-            this.uxAuthCmdLogin.Size = new System.Drawing.Size(75, 23);
+            this.uxAuthCmdLogin.Size = new System.Drawing.Size(100, 28);
             this.uxAuthCmdLogin.TabIndex = 4;
             this.uxAuthCmdLogin.Text = "Login";
             this.uxAuthCmdLogin.UseVisualStyleBackColor = true;
@@ -206,54 +217,60 @@ namespace VisualVault.Forms.Import
             // 
             this.uxAuthPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.uxAuthPassword.Location = new System.Drawing.Point(70, 127);
+            this.uxAuthPassword.Location = new System.Drawing.Point(93, 156);
+            this.uxAuthPassword.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.uxAuthPassword.Name = "uxAuthPassword";
             this.uxAuthPassword.PasswordChar = '*';
-            this.uxAuthPassword.Size = new System.Drawing.Size(300, 20);
+            this.uxAuthPassword.Size = new System.Drawing.Size(399, 22);
             this.uxAuthPassword.TabIndex = 3;
             // 
             // uxAuthUserID
             // 
             this.uxAuthUserID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.uxAuthUserID.Location = new System.Drawing.Point(70, 93);
+            this.uxAuthUserID.Location = new System.Drawing.Point(93, 114);
+            this.uxAuthUserID.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.uxAuthUserID.Name = "uxAuthUserID";
-            this.uxAuthUserID.Size = new System.Drawing.Size(300, 20);
+            this.uxAuthUserID.Size = new System.Drawing.Size(399, 22);
             this.uxAuthUserID.TabIndex = 2;
             // 
             // uxAuthServerUrl
             // 
             this.uxAuthServerUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.uxAuthServerUrl.Location = new System.Drawing.Point(70, 59);
+            this.uxAuthServerUrl.Location = new System.Drawing.Point(93, 73);
+            this.uxAuthServerUrl.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.uxAuthServerUrl.Name = "uxAuthServerUrl";
-            this.uxAuthServerUrl.Size = new System.Drawing.Size(300, 20);
+            this.uxAuthServerUrl.Size = new System.Drawing.Size(399, 22);
             this.uxAuthServerUrl.TabIndex = 1;
             // 
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(8, 130);
+            this.label26.Location = new System.Drawing.Point(11, 160);
+            this.label26.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(56, 13);
+            this.label26.Size = new System.Drawing.Size(73, 17);
             this.label26.TabIndex = 3;
             this.label26.Text = "Password:";
             // 
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(17, 96);
+            this.label27.Location = new System.Drawing.Point(23, 118);
+            this.label27.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(46, 13);
+            this.label27.Size = new System.Drawing.Size(59, 17);
             this.label27.TabIndex = 2;
             this.label27.Text = "User ID:";
             // 
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(7, 62);
+            this.label29.Location = new System.Drawing.Point(9, 76);
+            this.label29.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(57, 13);
+            this.label29.Size = new System.Drawing.Size(76, 17);
             this.label29.TabIndex = 0;
             this.label29.Text = "Server Url:";
             // 
@@ -276,20 +293,71 @@ namespace VisualVault.Forms.Import
             this.tabPage2.Controls.Add(this.label1);
             this.tabPage2.Controls.Add(this.btnSelectFile);
             this.tabPage2.Controls.Add(this.txtFilePath);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(536, 390);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage2.Size = new System.Drawing.Size(717, 483);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Import Form Data";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(101, 315);
+            this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(244, 17);
+            this.label10.TabIndex = 32;
+            this.label10.Text = "H=(0-23),h=(0-12),m=(0-59),s=(0-59)";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(101, 292);
+            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(351, 17);
+            this.label9.TabIndex = 31;
+            this.label9.Text = "d=(1-31), dd=(01-31), M=(1-12), MM=(01-12), yy, yyyy";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(101, 287);
+            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(0, 17);
+            this.label8.TabIndex = 30;
+            // 
+            // txtDateTimeFormat
+            // 
+            this.txtDateTimeFormat.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtDateTimeFormat.Location = new System.Drawing.Point(104, 257);
+            this.txtDateTimeFormat.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtDateTimeFormat.Name = "txtDateTimeFormat";
+            this.txtDateTimeFormat.Size = new System.Drawing.Size(511, 26);
+            this.txtDateTimeFormat.TabIndex = 29;
+            this.txtDateTimeFormat.Text = "d-MM-yyyy h:mm:ss,d/MM/yyyy,dd-MM-YYYY h:mm:ss";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(100, 238);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(393, 17);
+            this.label7.TabIndex = 28;
+            this.label7.Text = "Source Date-Time Formats (comma separated list of formats)";
+            // 
             // chkAllowUpdate
             // 
             this.chkAllowUpdate.AutoSize = true;
-            this.chkAllowUpdate.Location = new System.Drawing.Point(78, 340);
+            this.chkAllowUpdate.Location = new System.Drawing.Point(104, 418);
+            this.chkAllowUpdate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkAllowUpdate.Name = "chkAllowUpdate";
-            this.chkAllowUpdate.Size = new System.Drawing.Size(309, 17);
+            this.chkAllowUpdate.Size = new System.Drawing.Size(413, 21);
             this.chkAllowUpdate.TabIndex = 27;
             this.chkAllowUpdate.Text = "First column contains Form Id (used to update existing forms)";
             this.chkAllowUpdate.UseVisualStyleBackColor = true;
@@ -297,9 +365,10 @@ namespace VisualVault.Forms.Import
             // chkCsvLinesQuoted
             // 
             this.chkCsvLinesQuoted.AutoSize = true;
-            this.chkCsvLinesQuoted.Location = new System.Drawing.Point(78, 316);
+            this.chkCsvLinesQuoted.Location = new System.Drawing.Point(104, 389);
+            this.chkCsvLinesQuoted.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkCsvLinesQuoted.Name = "chkCsvLinesQuoted";
-            this.chkCsvLinesQuoted.Size = new System.Drawing.Size(184, 17);
+            this.chkCsvLinesQuoted.Size = new System.Drawing.Size(241, 21);
             this.chkCsvLinesQuoted.TabIndex = 26;
             this.chkCsvLinesQuoted.Text = "CSV Line Item Values are Quoted";
             this.chkCsvLinesQuoted.UseVisualStyleBackColor = true;
@@ -307,9 +376,10 @@ namespace VisualVault.Forms.Import
             // chkCsvHeadersQuoted
             // 
             this.chkCsvHeadersQuoted.AutoSize = true;
-            this.chkCsvHeadersQuoted.Location = new System.Drawing.Point(78, 292);
+            this.chkCsvHeadersQuoted.Location = new System.Drawing.Point(104, 359);
+            this.chkCsvHeadersQuoted.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkCsvHeadersQuoted.Name = "chkCsvHeadersQuoted";
-            this.chkCsvHeadersQuoted.Size = new System.Drawing.Size(176, 17);
+            this.chkCsvHeadersQuoted.Size = new System.Drawing.Size(231, 21);
             this.chkCsvHeadersQuoted.TabIndex = 25;
             this.chkCsvHeadersQuoted.Text = "CSV Header Values are Quoted";
             this.chkCsvHeadersQuoted.UseVisualStyleBackColor = true;
@@ -317,26 +387,29 @@ namespace VisualVault.Forms.Import
             // txtDelimeter
             // 
             this.txtDelimeter.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDelimeter.Location = new System.Drawing.Point(78, 153);
+            this.txtDelimeter.Location = new System.Drawing.Point(104, 188);
+            this.txtDelimeter.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtDelimeter.Name = "txtDelimeter";
-            this.txtDelimeter.Size = new System.Drawing.Size(384, 23);
+            this.txtDelimeter.Size = new System.Drawing.Size(511, 26);
             this.txtDelimeter.TabIndex = 24;
             this.txtDelimeter.Text = ",";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(75, 137);
+            this.label3.Location = new System.Drawing.Point(100, 169);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(293, 13);
+            this.label3.Size = new System.Drawing.Size(395, 17);
             this.label3.TabIndex = 23;
             this.label3.Text = "Delimiter character (character that separates the field values)";
             // 
             // btnFetchTemplates
             // 
-            this.btnFetchTemplates.Location = new System.Drawing.Point(438, 47);
+            this.btnFetchTemplates.Location = new System.Drawing.Point(584, 58);
+            this.btnFetchTemplates.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnFetchTemplates.Name = "btnFetchTemplates";
-            this.btnFetchTemplates.Size = new System.Drawing.Size(24, 23);
+            this.btnFetchTemplates.Size = new System.Drawing.Size(32, 28);
             this.btnFetchTemplates.TabIndex = 18;
             this.btnFetchTemplates.Text = "...";
             this.toolTip1.SetToolTip(this.btnFetchTemplates, "Fetch form templates");
@@ -347,27 +420,30 @@ namespace VisualVault.Forms.Import
             // 
             this.cboFormTemplates.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboFormTemplates.FormattingEnabled = true;
-            this.cboFormTemplates.Location = new System.Drawing.Point(78, 47);
+            this.cboFormTemplates.Location = new System.Drawing.Point(104, 58);
+            this.cboFormTemplates.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cboFormTemplates.Name = "cboFormTemplates";
-            this.cboFormTemplates.Size = new System.Drawing.Size(354, 24);
+            this.cboFormTemplates.Size = new System.Drawing.Size(471, 28);
             this.cboFormTemplates.TabIndex = 16;
             this.cboFormTemplates.SelectedIndexChanged += new System.EventHandler(this.CboFormTemplatesSelectedIndexChanged);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(75, 31);
+            this.label4.Location = new System.Drawing.Point(100, 38);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(133, 13);
+            this.label4.Size = new System.Drawing.Size(178, 17);
             this.label4.TabIndex = 15;
             this.label4.Text = "Select target form template";
             this.label4.UseMnemonic = false;
             // 
             // btnImport
             // 
-            this.btnImport.Location = new System.Drawing.Point(429, 361);
+            this.btnImport.Location = new System.Drawing.Point(572, 444);
+            this.btnImport.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(100, 23);
+            this.btnImport.Size = new System.Drawing.Size(133, 28);
             this.btnImport.TabIndex = 12;
             this.btnImport.Text = "Start Import";
             this.toolTip1.SetToolTip(this.btnImport, "Begin Form Import Process");
@@ -377,17 +453,19 @@ namespace VisualVault.Forms.Import
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(75, 86);
+            this.label1.Location = new System.Drawing.Point(100, 106);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(105, 13);
+            this.label1.Size = new System.Drawing.Size(137, 17);
             this.label1.TabIndex = 11;
             this.label1.Text = "Select CSV File Path";
             // 
             // btnSelectFile
             // 
-            this.btnSelectFile.Location = new System.Drawing.Point(438, 99);
+            this.btnSelectFile.Location = new System.Drawing.Point(584, 122);
+            this.btnSelectFile.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnSelectFile.Name = "btnSelectFile";
-            this.btnSelectFile.Size = new System.Drawing.Size(24, 23);
+            this.btnSelectFile.Size = new System.Drawing.Size(32, 28);
             this.btnSelectFile.TabIndex = 10;
             this.btnSelectFile.Text = "...";
             this.toolTip1.SetToolTip(this.btnSelectFile, "Browse for CSV File");
@@ -397,13 +475,15 @@ namespace VisualVault.Forms.Import
             // txtFilePath
             // 
             this.txtFilePath.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtFilePath.Location = new System.Drawing.Point(78, 102);
+            this.txtFilePath.Location = new System.Drawing.Point(104, 126);
+            this.txtFilePath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtFilePath.Name = "txtFilePath";
-            this.txtFilePath.Size = new System.Drawing.Size(354, 23);
+            this.txtFilePath.Size = new System.Drawing.Size(471, 26);
             this.txtFilePath.TabIndex = 9;
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.chkExportRelatedDocs);
             this.tabPage3.Controls.Add(this.btnFetchDashboards);
             this.tabPage3.Controls.Add(this.cboFormDashboards);
             this.tabPage3.Controls.Add(this.label2);
@@ -411,19 +491,21 @@ namespace VisualVault.Forms.Import
             this.tabPage3.Controls.Add(this.label6);
             this.tabPage3.Controls.Add(this.btnSelectExportFile);
             this.tabPage3.Controls.Add(this.txtExportFilePath);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Location = new System.Drawing.Point(4, 25);
+            this.tabPage3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(536, 390);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage3.Size = new System.Drawing.Size(717, 483);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Export Form Data";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // btnFetchDashboards
             // 
-            this.btnFetchDashboards.Location = new System.Drawing.Point(409, 66);
+            this.btnFetchDashboards.Location = new System.Drawing.Point(545, 81);
+            this.btnFetchDashboards.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnFetchDashboards.Name = "btnFetchDashboards";
-            this.btnFetchDashboards.Size = new System.Drawing.Size(24, 23);
+            this.btnFetchDashboards.Size = new System.Drawing.Size(32, 28);
             this.btnFetchDashboards.TabIndex = 28;
             this.btnFetchDashboards.Text = "...";
             this.toolTip1.SetToolTip(this.btnFetchDashboards, "Fetch form templates");
@@ -433,27 +515,30 @@ namespace VisualVault.Forms.Import
             // cboFormDashboards
             // 
             this.cboFormDashboards.FormattingEnabled = true;
-            this.cboFormDashboards.Location = new System.Drawing.Point(106, 66);
+            this.cboFormDashboards.Location = new System.Drawing.Point(141, 81);
+            this.cboFormDashboards.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cboFormDashboards.Name = "cboFormDashboards";
-            this.cboFormDashboards.Size = new System.Drawing.Size(297, 21);
+            this.cboFormDashboards.Size = new System.Drawing.Size(395, 24);
             this.cboFormDashboards.TabIndex = 27;
             this.cboFormDashboards.SelectedIndexChanged += new System.EventHandler(this.CboFormDashboardsSelectedIndexChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(103, 50);
+            this.label2.Location = new System.Drawing.Point(137, 62);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(113, 13);
+            this.label2.Size = new System.Drawing.Size(151, 17);
             this.label2.TabIndex = 26;
             this.label2.Text = "Select form dashboard";
             this.label2.UseMnemonic = false;
             // 
             // btnExport
             // 
-            this.btnExport.Location = new System.Drawing.Point(428, 361);
+            this.btnExport.Location = new System.Drawing.Point(571, 444);
+            this.btnExport.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(100, 23);
+            this.btnExport.Size = new System.Drawing.Size(133, 28);
             this.btnExport.TabIndex = 23;
             this.btnExport.Text = "Start Export";
             this.toolTip1.SetToolTip(this.btnExport, "Begin Form Import Process");
@@ -463,17 +548,19 @@ namespace VisualVault.Forms.Import
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(103, 103);
+            this.label6.Location = new System.Drawing.Point(137, 127);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(87, 13);
+            this.label6.Size = new System.Drawing.Size(113, 17);
             this.label6.TabIndex = 22;
             this.label6.Text = "Save to CSV File";
             // 
             // btnSelectExportFile
             // 
-            this.btnSelectExportFile.Location = new System.Drawing.Point(409, 118);
+            this.btnSelectExportFile.Location = new System.Drawing.Point(545, 145);
+            this.btnSelectExportFile.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnSelectExportFile.Name = "btnSelectExportFile";
-            this.btnSelectExportFile.Size = new System.Drawing.Size(24, 23);
+            this.btnSelectExportFile.Size = new System.Drawing.Size(32, 28);
             this.btnSelectExportFile.TabIndex = 21;
             this.btnSelectExportFile.Text = "...";
             this.toolTip1.SetToolTip(this.btnSelectExportFile, "Browse for CSV File");
@@ -482,9 +569,10 @@ namespace VisualVault.Forms.Import
             // 
             // txtExportFilePath
             // 
-            this.txtExportFilePath.Location = new System.Drawing.Point(106, 121);
+            this.txtExportFilePath.Location = new System.Drawing.Point(141, 149);
+            this.txtExportFilePath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtExportFilePath.Name = "txtExportFilePath";
-            this.txtExportFilePath.Size = new System.Drawing.Size(297, 20);
+            this.txtExportFilePath.Size = new System.Drawing.Size(395, 22);
             this.txtExportFilePath.TabIndex = 20;
             // 
             // openFileDialog1
@@ -502,13 +590,15 @@ namespace VisualVault.Forms.Import
             // 
             // menuStrip1
             // 
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.profilesToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(544, 24);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(725, 28);
             this.menuStrip1.TabIndex = 18;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -517,13 +607,13 @@ namespace VisualVault.Forms.Import
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
             this.fileToolStripMenuItem.Text = "‎File";
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(102, 24);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItemClick);
             // 
@@ -536,39 +626,39 @@ namespace VisualVault.Forms.Import
             this.toolStripSeparator1,
             this.deleteToolStripMenuItem});
             this.profilesToolStripMenuItem.Name = "profilesToolStripMenuItem";
-            this.profilesToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
+            this.profilesToolStripMenuItem.Size = new System.Drawing.Size(70, 24);
             this.profilesToolStripMenuItem.Text = "Profiles";
             // 
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(129, 24);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.NewToolStripMenuItemClick);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(129, 24);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItemClick);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(129, 24);
             this.saveAsToolStripMenuItem.Text = "Save As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItemClick);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(111, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(126, 6);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(129, 24);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.DeleteToolStripMenuItemClick);
             // 
@@ -577,81 +667,49 @@ namespace VisualVault.Forms.Import
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(119, 24);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItemClick);
-            // 
-            // txtDateTimeFormat
-            // 
-            this.txtDateTimeFormat.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDateTimeFormat.Location = new System.Drawing.Point(78, 209);
-            this.txtDateTimeFormat.Name = "txtDateTimeFormat";
-            this.txtDateTimeFormat.Size = new System.Drawing.Size(384, 23);
-            this.txtDateTimeFormat.TabIndex = 29;
-            this.txtDateTimeFormat.Text = "d-MM-yyyy h:mm:ss,d/MM/yyyy,dd-MM-YYYY h:mm:ss";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(75, 193);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(290, 13);
-            this.label7.TabIndex = 28;
-            this.label7.Text = "Source Date-Time Formats (comma separated list of formats)";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(76, 233);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(0, 13);
-            this.label8.TabIndex = 30;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(76, 237);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(256, 13);
-            this.label9.TabIndex = 31;
-            this.label9.Text = "d=(1-31), dd=(01-31), M=(1-12), MM=(01-12), yy, yyyy";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(76, 256);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(175, 13);
-            this.label10.TabIndex = 32;
-            this.label10.Text = "H=(0-23),h=(0-12),m=(0-59),s=(0-59)";
             // 
             // progressBar1
             // 
             this.progressBar1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.progressBar1.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.progressBar1.Location = new System.Drawing.Point(0, 449);
+            this.progressBar1.Location = new System.Drawing.Point(0, 553);
+            this.progressBar1.Margin = new System.Windows.Forms.Padding(4);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(544, 23);
+            this.progressBar1.Size = new System.Drawing.Size(725, 28);
             this.progressBar1.TabIndex = 17;
+            // 
+            // chkExportRelatedDocs
+            // 
+            this.chkExportRelatedDocs.AutoSize = true;
+            this.chkExportRelatedDocs.Location = new System.Drawing.Point(141, 207);
+            this.chkExportRelatedDocs.Name = "chkExportRelatedDocs";
+            this.chkExportRelatedDocs.Size = new System.Drawing.Size(198, 21);
+            this.chkExportRelatedDocs.TabIndex = 29;
+            this.chkExportRelatedDocs.Text = "Export Related Documents";
+            this.chkExportRelatedDocs.UseVisualStyleBackColor = true;
             // 
             // ImportFormData
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(544, 472);
+            this.ClientSize = new System.Drawing.Size(725, 581);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "ImportFormData";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "VisualVault Form Import/Export Utility";
@@ -731,6 +789,7 @@ namespace VisualVault.Forms.Import
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.CheckBox chkExportRelatedDocs;
     }
 }
 
