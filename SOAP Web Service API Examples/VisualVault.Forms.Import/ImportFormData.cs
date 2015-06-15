@@ -559,7 +559,7 @@ namespace VisualVault.Forms.Import
 
             Application.DoEvents();
 
-            _exportEngine = new FormExportEngine(_exportFilePath, _selectedFormDashboard, _vault);
+            _exportEngine = new FormExportEngine(_exportFilePath, _selectedFormDashboard, _vault, chkExportRelatedDocs.Checked);
 
             _exportEngine.OnProgressChanged += OnExportProgressChanged;
 
