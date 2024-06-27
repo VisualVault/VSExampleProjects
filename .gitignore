@@ -213,3 +213,16 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+/packages
+/SOAP Web Service API Examples/VisualVault.Examples/.vs/VisualVault.Examples.csproj.dtbcache.json
+/SOAP Web Service API Examples/VisualVault.Examples.AdvancedSearch/.vs/VisualVault.Examples.AdvancedSearch.csproj.dtbcache.json
+/SOAP Web Service API Examples/VisualVault.Examples.Common/.vs/VisualVault.Examples.Common.csproj.dtbcache.json
+/SOAP Web Service API Examples/VisualVault.Examples.IndexFields.WebServiceIntegration/.vs/VisualVault.Examples.IndexFields.WebServiceIntegration.csproj.dtbcache.json
+/SOAP Web Service API Examples/VisualVault.Examples.SingleSignOn/.vs/VisualVault.Examples.SingleSignOn.csproj.dtbcache.json
+/SOAP Web Service API Examples/VisualVault.Forms.WebServiceIntegration/.vs/VisualVault.Examples.Forms.WebServiceIntegration.csproj.dtbcache.json
+/SOAP Web Service API Examples/VisualVault.UserImport/.vs/VisualVault.Examples.UserImport.csproj.dtbcache.json
+/SOAP Web Service API Examples/VisualVault.Export/.vs/VisualVault.Examples.Export.csproj.dtbcache.json
+/.vs/VSExampleProjects/FileContentIndex
+/.vs/VSExampleProjects/v17
+/.vs/VSExampleProjects/config/applicationhost.config
+/SOAP Web Service API Examples/VisualVault.Forms.Import/.vs/VisualVault.Examples.Forms.Import.csproj.dtbcache.json

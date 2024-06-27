@@ -42,7 +42,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(296, 16);
             this.label2.TabIndex = 6;
-            this.label2.Text = "Copyright 2011";
+            this.label2.Text = "Copyright 2011-2024";
             this.label2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // lblBuild

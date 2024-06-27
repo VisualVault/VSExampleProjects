@@ -1,7 +1,9 @@
 ﻿using System;
-using VVRuntime.VisualVault;
-using VVRuntime.VisualVault.Library;
-using VisualVault.Examples.Common;
+using VisualVault.Forms.Import.Extensions;
+using VVRestApi.Common;
+using VVRestApi.Vault;
+//using VVRuntime;
+//using VVRuntime.VisualVault;
 
 namespace VisualVault.Forms.Import.BusinessLogic
 {
@@ -10,44 +12,44 @@ namespace VisualVault.Forms.Import.BusinessLogic
         public class AuthenticationResult
         {
             public bool IsAuthenticated;
-            public Vault Vault;
-            public DocumentLibrary Library;
+            public VaultApi Vault;
             public string StatusMessage = string.Empty;
         }
-
-        public static AuthenticationResult AuthenticateUser(string userId, string password, string serverUrl)
+        
+        public static AuthenticationResult AuthenticateUser(string userId, string password, string serverUrl,string customerAlias, string databaseAlias)
         {
-            var vault = VVRuntime.VisualVaultLogin.Login(serverUrl, userId, password, Constants.DeveloperKey, Constants.DeveloperSecret, Constants.ProductId);
-
+            //var vault = VVRuntime.VisualVaultLogin.Login(serverUrl, userId, password,"","",Guid.Empty);
             var myResult = new AuthenticationResult();
 
-            if (vault !=null)
+            try
             {
-                myResult.Vault = vault;
-            }
+                var clientSecrets = new ClientSecrets
+                {
+                    ApiKey = userId,
+                    ApiSecret = password,
+                    OAuthTokenEndPoint = serverUrl + @"/oauth/token",
+                    BaseUrl = serverUrl,
+                    CustomerAlias = customerAlias,
+                    DatabaseAlias = databaseAlias,
+                    ApiVersion = "1",
+                    Scope = "vault"
+                };
 
-            if (myResult.Vault != null)
+                var vault = new VaultApi(clientSecrets);
+
+                if (!vault.ApiTokens.AccessToken.IsNullOrEmpty())
+                {
+                    myResult.Vault = vault;
+                    myResult.IsAuthenticated = true;
+                    myResult.StatusMessage = "Logged In";
+                }
+                else
+                {
+                    myResult.StatusMessage = "Login Failed";
+                }
+            }catch(Exception ex)
             {
-                if (myResult.Vault.CurrentUser != null)
-                    if (myResult.Vault.CurrentUser.GetCurrentUsID() != Guid.Empty)
-                    {
-                        myResult.Library = myResult.Vault.DefaultStore.Library;
-                        myResult.IsAuthenticated = true;
 
-                        myResult.StatusMessage = "Logged In";
-                    }
-                    else
-                    {
-                        // for older builds of VV that will give back a vault object but not a user when the product is not licensed
-                        myResult.Vault = null;
-                        myResult.IsAuthenticated = false;
-
-                        myResult.StatusMessage = "Login Failed. Check the licensing requirements.";
-                    }
-            }
-            else
-            {
-                myResult.StatusMessage = "Login Failed. Check the user name, the password, and/or the licensing requirements.";
             }
 
             return myResult;

@@ -1,18 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
-using VVRuntime.VisualVault;
-using VVRuntime.VisualVault.Forms;
 using VisualVault.Forms.Import.BusinessLogic;
 using VisualVault.Forms.Import.Entities;
 using VisualVault.Forms.Import.Entities.Profiles;
 using VisualVault.Forms.Import.UI;
+using VVRestApi.Vault;
+using VVRestApi.Vault.Forms;
+using VVRestApi.Vault.Library;
 using Form = System.Windows.Forms.Form;
 
 namespace VisualVault.Forms.Import
@@ -22,11 +25,13 @@ namespace VisualVault.Forms.Import
 
         #region Fields
 
-        private Vault _vault;
+        //private Vault _vault;
+
+        private VaultApi _vault;
 
         private FormTemplate _selectedFormTemplate;
 
-        private FormDashboard _selectedFormDashboard;
+        //private FormDashboard _selectedFormDashboard;
 
         private FormImportActionType _actionType;
 
@@ -44,6 +49,16 @@ namespace VisualVault.Forms.Import
 
         private string _serverCulture;
 
+        private CancellationToken _cancellationToken = new CancellationToken();
+
+        private string _newUserEmailField;
+
+        private string _newUserIdField;
+
+        private string _newUserSiteField;
+
+        private string _newUserAccountFormFilter;
+
         #endregion
 
         /// <summary>
@@ -57,15 +72,12 @@ namespace VisualVault.Forms.Import
 
             tabPage2.Enabled = false;
             tabPage3.Enabled = false;
+            tabPage5.Enabled = false;           
 
             ShowFirstProfile();
 
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             lblVersion.Text = string.Format("Version {0}", version);
-
-            uxAuthServerUrl.Text = VisualVault.Examples.Common.Constants.SoapApiServerUrl;
-            uxAuthUserID.Text = VisualVault.Examples.Common.Constants.UserId;
-            uxAuthPassword.Text = VisualVault.Examples.Common.Constants.Password;
         }
 
         #region Event Handlers
@@ -76,7 +88,7 @@ namespace VisualVault.Forms.Import
             switch (args.ImportStatus)
             {
                 case ProgressStatus.Starting:
-                    var step = args.TotalItems >0 ? 100 / args.TotalItems : 0;
+                    var step = args.TotalItems > 0 ? 100 / args.TotalItems : 0;
                     Invoke((Action)(() => progressBar1.Step = step));
                     break;
                 case ProgressStatus.Processing:
@@ -85,7 +97,7 @@ namespace VisualVault.Forms.Import
                 case ProgressStatus.Completed:
                     Invoke((Action)(() => progressBar1.Value = 100));
                     Invoke((Action)(() => btnImport.Text = "Start Import"));
-                    Application.DoEvents();
+                    Invoke((Action)(Application.DoEvents));
                     break;
             }
 
@@ -93,7 +105,8 @@ namespace VisualVault.Forms.Import
 
             if (!string.IsNullOrEmpty(args.ErrorMessage))
             {
-                Invoke((Action)(() => MessageBox.Show(args.ErrorMessage, "Error", MessageBoxButtons.OK)));
+                Invoke((Action)(() => txtErrors.Text = txtErrors.Text + Environment.NewLine + Environment.NewLine + args.ProgressMessage));
+                Invoke((Action)(Application.DoEvents));
             }
         }
 
@@ -122,6 +135,29 @@ namespace VisualVault.Forms.Import
             }
         }
 
+        private void btnCreateUserAccounts_Click(object sender, EventArgs e)
+        {
+            var createUsersFormTemplate = (FormTemplate)cboCreateUserFormTemplates.SelectedItem;
+
+            _newUserEmailField = (string)cboCreateUserEmailField.SelectedText;
+            _newUserIdField = (string)cboCreateUserUserIdField.SelectedText;
+            _newUserSiteField = (string)cboCreateUserSiteField.SelectedText;
+            _newUserAccountFormFilter = txtCreateUserApiFilter.Text;
+
+            if (createUsersFormTemplate != null)
+            {
+                _actionType = FormImportActionType.CreateUserAccountsUsingFormRecords;
+                if (!backgroundWorker1.IsBusy)
+                {
+                    backgroundWorker1.RunWorkerAsync();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select a form template", "Error", MessageBoxButtons.OK);
+            }
+        }
+
         private void BtnLoginClick(object sender, EventArgs e)
         {
             _actionType = FormImportActionType.Authenticate;
@@ -136,24 +172,18 @@ namespace VisualVault.Forms.Import
 
                 if (File.Exists(_csvFilePath))
                 {
-                    //if (!Common.FileSystem.IsFileInUse(_profile.ImportCsvSourcePath))
-                    //{
-                        if (txtDelimeter.Text.Length > 0)
+                    if (txtDelimeter.Text.Length > 0)
+                    {
+                        _actionType = FormImportActionType.ImportForms;
+                        if (!backgroundWorker1.IsBusy)
                         {
-                            _actionType = FormImportActionType.ImportForms;
-                            if (!backgroundWorker1.IsBusy)
-                            {
-                                backgroundWorker1.RunWorkerAsync();
-                            }
+                            backgroundWorker1.RunWorkerAsync();
                         }
-                        else
-                        {
-                            MessageBox.Show("Missing Delimeter Character", "Error", MessageBoxButtons.OK);
-                        }
-                    //}else
-                    //{
-                    //    MessageBox.Show(string.Format("File {0} is in use by another application", _profile.ImportCsvSourcePath), "Source file in use by another application", MessageBoxButtons.OK);
-                    //}
+                    }
+                    else
+                    {
+                        MessageBox.Show("Missing Delimeter Character", "Error", MessageBoxButtons.OK);
+                    }
                 }
                 else
                 {
@@ -167,9 +197,31 @@ namespace VisualVault.Forms.Import
 
         }
 
+        private void BtnDeleteAllClick(object sender, EventArgs e)
+        {
+            var deleteFromTemplate = (FormTemplate)cboDeleteFormTemplates.SelectedItem;
+
+            if (deleteFromTemplate != null)
+            {
+                _actionType = FormImportActionType.DeleteAll;
+                if (!backgroundWorker1.IsBusy)
+                {
+                    backgroundWorker1.RunWorkerAsync();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select a form template", "Error", MessageBoxButtons.OK);
+            }
+
+        }
+
         private void CboFormTemplatesSelectedIndexChanged(object sender, EventArgs e)
         {
-            _selectedFormTemplate = (FormTemplate)cboFormTemplates.SelectedItem;
+            var template = (FormTemplate)cboFormTemplates.SelectedItem;
+
+            //must get the latest released template version
+            _selectedFormTemplate = _vault.FormTemplates.GetFormTemplate(template.Id);
         }
 
         private void BtnSelectFileClick(object sender, EventArgs e)
@@ -198,6 +250,32 @@ namespace VisualVault.Forms.Import
             }
         }
 
+        private void btnFetchDeleteTemplates_Click(object sender, EventArgs e)
+        {
+            if (!backgroundWorker1.IsBusy)
+            {
+                _actionType = FormImportActionType.GetDeletedTemplatesList;
+                backgroundWorker1.RunWorkerAsync();
+            }
+            else
+            {
+                MessageBox.Show("Busy processing another task, please wait...");
+            }
+        }
+
+        private void btnFetchCreateUserTemplates_Click(object sender, EventArgs e)
+        {
+            if (!backgroundWorker1.IsBusy)
+            {
+                _actionType = FormImportActionType.GetCreateUserTemplateList;
+                backgroundWorker1.RunWorkerAsync();
+            }
+            else
+            {
+                //MessageBox.Show("Busy processing another task, please wait...");
+            }
+        }
+
         private void OpenFileDialog1FileOk(object sender, CancelEventArgs e)
         {
             txtFilePath.Text = openFileDialog1.FileName;
@@ -223,29 +301,29 @@ namespace VisualVault.Forms.Import
 
         private void BtnExportClick(object sender, EventArgs e)
         {
-            if (_selectedFormDashboard != null)
-            {
-                _exportFilePath = txtExportFilePath.Text;
+            //if (_selectedFormDashboard != null)
+            //{
+            //    _exportFilePath = txtExportFilePath.Text;
 
-                if (Path.HasExtension(_exportFilePath))
-                {
-                    _actionType = FormImportActionType.ExportFormDashboard;
-                    backgroundWorker1.RunWorkerAsync();
-                }
-                else
-                {
-                    MessageBox.Show("Please select a target csv file for the export", "Error", MessageBoxButtons.OK);
-                }
-            }
-            else
-            {
-                MessageBox.Show("Please select a Form Dashboard", "Error", MessageBoxButtons.OK);
-            }
+            //    if (Path.HasExtension(_exportFilePath))
+            //    {
+            //        _actionType = FormImportActionType.ExportFormDashboard;
+            //        backgroundWorker1.RunWorkerAsync();
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show("Please select a target csv file for the export", "Error", MessageBoxButtons.OK);
+            //    }
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Please select a Form Dashboard", "Error", MessageBoxButtons.OK);
+            //}
         }
 
         private void CboFormDashboardsSelectedIndexChanged(object sender, EventArgs e)
         {
-            _selectedFormDashboard = (FormDashboard)cboFormDashboards.SelectedItem;
+            //_selectedFormDashboard = (FormDashboard)cboFormDashboards.SelectedItem;
         }
 
         private void ExitToolStripMenuItemClick(object sender, EventArgs e)
@@ -264,12 +342,7 @@ namespace VisualVault.Forms.Import
 
         private void CboProfilesSelectedIndexChanged(object sender, EventArgs e)
         {
-            _profile = _profiles.GetByName(cboProfiles.SelectedItem.ToString());
-
-            if (_profile != null)
-            {
-                LoadSelectedProfile();
-            }
+            LoadProfileByName(cboProfiles.SelectedItem.ToString());
         }
 
         private void NewToolStripMenuItemClick(object sender, EventArgs e)
@@ -319,6 +392,20 @@ namespace VisualVault.Forms.Import
             }
         }
 
+        private void clearErrorsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            txtErrors.Text = "";
+        }
+
+        private void cboCreateUserFormTemplates_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!backgroundWorker1.IsBusy)
+            {
+                _actionType = FormImportActionType.PopulateCreateUserTemplateFields;
+                backgroundWorker1.RunWorkerAsync();
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -333,6 +420,15 @@ namespace VisualVault.Forms.Import
                 case FormImportActionType.GetTemplateList:
                     PopulateFormTemplates();
                     break;
+                case FormImportActionType.GetDeletedTemplatesList:
+                    PopulateDeletionFormTemplates();
+                    break;
+                case FormImportActionType.GetCreateUserTemplateList:
+                    PopulateCreateUsersFormTemplates();
+                    break;
+                case FormImportActionType.PopulateCreateUserTemplateFields:
+                    PopulateCreateUsersFormTemplateFields();
+                    break;
                 case FormImportActionType.ImportForms:
                     ImportData();
                     break;
@@ -341,6 +437,12 @@ namespace VisualVault.Forms.Import
                     break;
                 case FormImportActionType.ExportFormDashboard:
                     ExportData();
+                    break;
+                case FormImportActionType.DeleteAll:
+                    DeleteAllForms();
+                    break;
+                case FormImportActionType.CreateUserAccountsUsingFormRecords:
+                    CreateUserAccounts();
                     break;
             }
         }
@@ -353,52 +455,60 @@ namespace VisualVault.Forms.Import
             Invoke((Action)(() => uxAuthStatus.Text = "Attempting login..."));
             Invoke((Action)(() => progressBar1.Text = "Attempting login..."));
 
-            Application.DoEvents();
-
-            var authenticationResult = Authentication.AuthenticateUser(uxAuthUserID.Text, uxAuthPassword.Text, uxAuthServerUrl.Text);
-
-            if (authenticationResult.IsAuthenticated)
+            try
             {
-                Invoke((Action)(() => uxAuthStatus.ForeColor = Color.Green));
 
-                _vault = authenticationResult.Vault;
+                var authenticationResult = Authentication.AuthenticateUser(uxAuthUserID.Text, uxAuthPassword.Text,
+                    uxAuthServerUrl.Text, uxAuthCustomerAlias.Text, uxAuthDbAlias.Text);
 
-                _serverCulture = _vault.Configurations.GetConfigurationSetting("CurrentCulture").Replace("_","-");
-
-                resultMessage = string.Format("Logged In - Target Vault Culture is {0}", _serverCulture);
-
-                Invoke((Action)(() => uxAuthStatus.Text = resultMessage));
-
-                if (_profile != null)
+                if (authenticationResult.IsAuthenticated)
                 {
-                    Invoke((Action)(() => SelectFormTemplate(_profile.ImportFormTemplateName)));
+                    Invoke((Action)(() => uxAuthStatus.ForeColor = Color.Green));
 
-                    Invoke((Action)(() => SelectFormDashboard(_profile.ExportFormDashboardName)));
+                    _vault = authenticationResult.Vault;
+
+                    //_serverCulture = _vault.Configurations.GetConfigurationSetting("CurrentCulture").Replace("_","-");
+
+                    resultMessage = string.Format("Logged In");
+
+                    Invoke((Action)(() => uxAuthStatus.Text = resultMessage));
+
+                    if (_profile != null)
+                    {
+                        Invoke((Action)(() => SelectFormTemplate(_profile.ImportFormTemplateName)));
+
+                        Invoke((Action)(() => SelectFormDashboard(_profile.ExportFormDashboardName)));
+                    }
+
+                    Invoke((Action)(() => tabControl1.SelectedTab = tabPage2));
+
+                    Invoke((Action)(EnableAllControls));
+
+                    Application.DoEvents();
+                }
+                else
+                {
+                    Invoke((Action)(() => uxAuthStatus.ForeColor = Color.Red));
+                    _vault = null;
+                    resultMessage = "Login Failed";
                 }
 
-                Invoke((Action)(() => tabControl1.SelectedTab = tabPage2));
+                Invoke((Action)(() => progressBar1.Text = resultMessage));
+                Invoke((Action)(() => uxAuthStatus.Text = resultMessage));
 
-                Invoke((Action)(EnableAllControls));
-
-                Application.DoEvents();
             }
-            else
+            catch (Exception ex)
             {
-                Invoke((Action)(() => uxAuthStatus.ForeColor = Color.Red));
-                _vault = null;
-                resultMessage = "Login Failed";
+                Invoke((Action)(() => progressBar1.Text = string.Format("Authentication error {0}", ex.Message)));
+                Invoke((Action)(() => uxAuthStatus.Text = string.Format("Authentication error {0}", ex.Message)));
             }
-
-            Invoke((Action)(() => progressBar1.Text = resultMessage));
-            Invoke((Action)(() => uxAuthStatus.Text = resultMessage));
-
-            Application.DoEvents();
         }
 
         private void EnableAllControls()
         {
             tabPage2.Enabled = true;
             tabPage3.Enabled = true;
+            tabPage5.Enabled = true;            
         }
 
         private void SelectFormTemplate(string formTemplateName)
@@ -420,7 +530,10 @@ namespace VisualVault.Forms.Import
                         cboFormTemplates.SelectedIndex = i;
                     }
 
-                    _selectedFormTemplate = (FormTemplate)cboFormTemplates.SelectedItem;
+                    var template = (FormTemplate)cboFormTemplates.SelectedItem;
+
+                    //must get the latest released template version
+                    _selectedFormTemplate = _vault.FormTemplates.GetFormTemplate(template.Id);
                 }
             }
             catch (Exception ex)
@@ -431,30 +544,30 @@ namespace VisualVault.Forms.Import
 
         private void SelectFormDashboard(string formDashBoardName)
         {
-            try
-            {
-                if (_vault != null)
-                {
-                    var i = cboFormDashboards.FindStringExact(formDashBoardName);
+            //try
+            //{
+            //    if (_vault != null)
+            //    {
+            //        var i = cboFormDashboards.FindStringExact(formDashBoardName);
 
-                    if (i < 0)
-                    {
-                        PopulateFormDashboards();
-                        i = cboFormDashboards.FindStringExact(formDashBoardName);
-                    }
+            //        if (i < 0)
+            //        {
+            //            PopulateFormDashboards();
+            //            i = cboFormDashboards.FindStringExact(formDashBoardName);
+            //        }
 
-                    if (i >= 0)
-                    {
-                        cboFormDashboards.SelectedIndex = i;
-                    }
+            //        if (i >= 0)
+            //        {
+            //            cboFormDashboards.SelectedIndex = i;
+            //        }
 
-                    _selectedFormDashboard = (FormDashboard)cboFormDashboards.SelectedItem;
-                }
-            }
-            catch (Exception ex)
-            {
-                Invoke((Action)(() => progressBar1.Text = ex.Message));
-            }
+            //        _selectedFormDashboard = (FormDashboard)cboFormDashboards.SelectedItem;
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Invoke((Action)(() => progressBar1.Text = ex.Message));
+            //}
         }
 
         private void PopulateFormTemplates()
@@ -465,20 +578,17 @@ namespace VisualVault.Forms.Import
 
             Application.DoEvents();
 
-            var templates = _vault.Forms.GetFormTemplates();
-
-            //foreach(FormTemplate template in templates)
-            //{
-            //    var test = _vault.Forms.GetFormTemplate(template.FormTemplateName);
-            //}
+            var templates = _vault.FormTemplates.GetFormTemplates().Items;
 
             string resultMessage;
 
             if (templates != null)
             {
-                resultMessage = string.Format("{0} Form templates found", templates.Count);
+                resultMessage = string.Format("{0} Form templates found", templates.Count());
 
-                Invoke((Action)(() => cboFormTemplates.DisplayMember = "FormTemplateName"));
+                //Invoke((Action)(() => cboFormTemplates.Items.Clear()));
+
+                Invoke((Action)(() => cboFormTemplates.DisplayMember = "Name"));
 
                 Invoke((Action)(() => cboFormTemplates.DataSource = templates));
             }
@@ -494,29 +604,31 @@ namespace VisualVault.Forms.Import
             Application.DoEvents();
         }
 
-        private void PopulateFormDashboards()
+        private void PopulateDeletionFormTemplates()
         {
             Invoke((Action)(() => progressBar1.Value = 0));
 
-            Invoke((Action)(() => progressBar1.Text = "Fetching Form Dashboards..."));
+            Invoke((Action)(() => progressBar1.Text = "Fetching Form Templates..."));
 
             Application.DoEvents();
 
-            var dashboards = _vault.Forms.GetFormDashboards();
+            var templates = _vault.FormTemplates.GetFormTemplates().Items;
 
             string resultMessage;
 
-            if (dashboards != null)
+            if (templates != null)
             {
-                resultMessage = string.Format("{0} Form Dashboards found", dashboards.Count);
+                resultMessage = string.Format("{0} Form templates found", templates.Count());
 
-                Invoke((Action)(() => cboFormDashboards.DisplayMember = "FormDashboardName"));
+                Invoke((Action)(() => cboDeleteFormTemplates.Items.Clear()));
 
-                Invoke((Action)(() => cboFormDashboards.DataSource = dashboards));
+                Invoke((Action)(() => cboDeleteFormTemplates.DisplayMember = "Name"));
+
+                Invoke((Action)(() => cboDeleteFormTemplates.DataSource = templates));
             }
             else
             {
-                resultMessage = "No Form Dashboards found";
+                resultMessage = "No form templates found";
             }
 
             Invoke((Action)(() => progressBar1.Value = 0));
@@ -524,6 +636,150 @@ namespace VisualVault.Forms.Import
             Invoke((Action)(() => progressBar1.Text = resultMessage));
 
             Application.DoEvents();
+        }
+
+        private void PopulateCreateUsersFormTemplates()
+        {
+            Invoke((Action)(() => progressBar1.Value = 0));
+
+            Invoke((Action)(() => progressBar1.Text = "Fetching Form Templates..."));
+
+            Application.DoEvents();
+
+            var templates = _vault.FormTemplates.GetFormTemplates().Items;
+
+            string resultMessage;
+
+            if (templates != null)
+            {
+                resultMessage = string.Format("{0} Form templates found", templates.Count());
+
+                Invoke((Action)(() => cboCreateUserFormTemplates.Items.Clear()));
+
+                Invoke((Action)(() => cboCreateUserFormTemplates.DisplayMember = "Name"));
+
+                Invoke((Action)(() => cboCreateUserFormTemplates.DataSource = templates));
+
+                Invoke((Action)(() => cboCreateUserFormTemplates.Items.Add("Select Form Template")));
+            }
+            else
+            {
+                resultMessage = "No form templates found";
+            }
+
+            Invoke((Action)(() => progressBar1.Value = 0));
+
+            Invoke((Action)(() => progressBar1.Text = resultMessage));
+
+            Application.DoEvents();
+        }
+
+        private void PopulateCreateUsersFormTemplateFields()
+        {
+            try
+            {
+                FormTemplate createUsersFormTemplate = null;
+
+                Invoke((Action)(() =>
+                {
+                    btnImport.Text = "Processing...";
+
+                    progressBar1.Value = 0;
+
+                    Application.DoEvents();
+
+                    createUsersFormTemplate = (FormTemplate)cboCreateUserFormTemplates.SelectedItem;
+
+                    if (createUsersFormTemplate != null)
+                    {
+                        cboCreateUserUserIdField.Items.Clear();
+                        cboCreateUserEmailField.Items.Clear();
+                        cboCreateUserSiteField.Items.Clear();
+
+                        foreach (KeyValuePair<string, string> formField in createUsersFormTemplate.GetFormFields().Fields)
+                        {
+                            cboCreateUserUserIdField.Items.Add(formField.Key);
+                            cboCreateUserEmailField.Items.Add(formField.Key);
+                            cboCreateUserSiteField.Items.Add(formField.Key);
+                        }
+                    }
+                }));
+
+            }
+            catch (Exception ex)
+            {
+                Invoke((Action)(() => MessageBox.Show(string.Format("{0} {1}", ex.Message, ex.StackTrace))));
+                Invoke((Action)(() => btnImport.Text = "Start Delete"));
+            }
+        }
+
+        private void CreateUserAccounts()
+        {
+            try
+            {
+                FormTemplate createUsersFormTemplate = null;
+
+                Invoke((Action)(() =>
+                {
+                    btnImport.Text = "Processing...";
+
+                    progressBar1.Value = 0;
+
+                    _profile = BuildFormProfile();
+
+                    Application.DoEvents();
+
+                    createUsersFormTemplate = (FormTemplate)cboCreateUserFormTemplates.SelectedItem;
+
+                }));
+
+                if (createUsersFormTemplate != null)
+                {
+                    _importEngine = new FormImportEngine(_csvFilePath, _vault, _selectedFormTemplate, _profile);
+
+                    _importEngine.OnProgressChanged += OnImportProgressChanged;
+
+                    _importEngine.CreateUserAccountsUsingFormInstances(createUsersFormTemplate, _newUserIdField,
+                        _newUserEmailField, _newUserSiteField, _newUserAccountFormFilter, _cancellationToken);
+                }
+            }
+            catch (Exception ex)
+            {
+                Invoke((Action)(() => MessageBox.Show(string.Format("{0} {1}", ex.Message, ex.StackTrace))));
+                Invoke((Action)(() => btnImport.Text = "Start Delete"));
+            }
+        }
+
+        private void PopulateFormDashboards()
+        {
+            //Invoke((Action)(() => progressBar1.Value = 0));
+
+            //Invoke((Action)(() => progressBar1.Text = "Fetching Form Dashboards..."));
+
+            //Application.DoEvents();
+
+            //var dashboards = _vault.Forms.GetFormDashboards();
+
+            //string resultMessage;
+
+            //if (dashboards != null)
+            //{
+            //    resultMessage = string.Format("{0} Form Dashboards found", dashboards.Count);
+
+            //    Invoke((Action)(() => cboFormDashboards.DisplayMember = "FormDashboardName"));
+
+            //    Invoke((Action)(() => cboFormDashboards.DataSource = dashboards));
+            //}
+            //else
+            //{
+            //    resultMessage = "No Form Dashboards found";
+            //}
+
+            //Invoke((Action)(() => progressBar1.Value = 0));
+
+            //Invoke((Action)(() => progressBar1.Text = resultMessage));
+
+            //Application.DoEvents();
         }
 
         private void ImportData()
@@ -551,6 +807,42 @@ namespace VisualVault.Forms.Import
             }
         }
 
+        private void DeleteAllForms()
+        {
+            try
+            {
+                FormTemplate deleteFromTemplate = null;
+
+                Invoke((Action)(() =>
+                {
+                    btnImport.Text = "Processing...";
+
+                    progressBar1.Value = 0;
+
+                    Application.DoEvents();
+
+                    _profile = BuildFormProfile();
+
+                    _importEngine = new FormImportEngine(_csvFilePath, _vault, _selectedFormTemplate, _profile);
+
+                    _importEngine.OnProgressChanged += OnImportProgressChanged;
+
+                    deleteFromTemplate = (FormTemplate)cboDeleteFormTemplates.SelectedItem;
+                }));
+
+                if (deleteFromTemplate != null)
+                {
+                    _importEngine.DeleteFormInstances(deleteFromTemplate, _cancellationToken);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Invoke((Action)(() => MessageBox.Show(string.Format("{0} {1}", ex.Message, ex.StackTrace))));
+                Invoke((Action)(() => btnImport.Text = "Start Delete"));
+            }
+        }
+
         private void ExportData()
         {
             Invoke((Action)(() => progressBar1.Value = 0));
@@ -559,11 +851,11 @@ namespace VisualVault.Forms.Import
 
             Application.DoEvents();
 
-            _exportEngine = new FormExportEngine(_exportFilePath, _selectedFormDashboard, _vault, chkExportRelatedDocs.Checked);
+            //_exportEngine = new FormExportEngine(_exportFilePath, _selectedFormDashboard);
 
-            _exportEngine.OnProgressChanged += OnExportProgressChanged;
+            //_exportEngine.OnProgressChanged += OnExportProgressChanged;
 
-            _exportEngine.ExportFormData();
+            //_exportEngine.ExportFormData();
         }
 
         private static bool ShutDownAndSave()
@@ -681,18 +973,21 @@ namespace VisualVault.Forms.Import
                 CsvLineItemsQuoted = chkCsvLinesQuoted.Checked,
                 CsvDelimeterCharacter = txtDelimeter.Text,
                 AllowUpdate = chkAllowUpdate.Checked,
-                DateTimeFormat = txtDateTimeFormat.Text
+                DateTimeFormat = txtDateTimeFormat.Text,
+                CustomerAlias = uxAuthCustomerAlias.Text,
+                DatabaseAlias = uxAuthDbAlias.Text
+
             };
 
             if (_selectedFormTemplate != null)
             {
-                profile.ImportFormTemplateName = _selectedFormTemplate.FormTemplateName;
+                profile.ImportFormTemplateName = _selectedFormTemplate.Name;
             }
 
-            if (_selectedFormDashboard != null)
-            {
-                profile.ExportFormDashboardName = _selectedFormDashboard.FormDashboardName;
-            }
+            //if (_selectedFormDashboard != null)
+            //{
+            //    profile.ExportFormDashboardName = _selectedFormDashboard.FormDashboardName;
+            //}
 
             if (!string.IsNullOrEmpty(newProfileName))
             {
@@ -755,7 +1050,9 @@ namespace VisualVault.Forms.Import
                         chkCsvHeadersQuoted.Checked = _profile.CsvHeadersQuoted;
                         chkCsvLinesQuoted.Checked = _profile.CsvLineItemsQuoted;
                         chkAllowUpdate.Checked = _profile.AllowUpdate;
-                       
+                        uxAuthCustomerAlias.Text = _profile.CustomerAlias;
+                        uxAuthDbAlias.Text = _profile.DatabaseAlias;
+
                         if (!string.IsNullOrEmpty(_profile.CsvDelimeterCharacter))
                         {
                             txtDelimeter.Text = _profile.CsvDelimeterCharacter;
@@ -790,7 +1087,7 @@ namespace VisualVault.Forms.Import
                     chkCsvHeadersQuoted.Checked = _profile.CsvHeadersQuoted;
                     chkCsvLinesQuoted.Checked = _profile.CsvLineItemsQuoted;
                     chkAllowUpdate.Checked = _profile.AllowUpdate;
-                   
+
                     if (!string.IsNullOrEmpty(_profile.CsvDelimeterCharacter))
                     {
                         txtDelimeter.Text = _profile.CsvDelimeterCharacter;
@@ -801,7 +1098,8 @@ namespace VisualVault.Forms.Import
                         txtDateTimeFormat.Text = _profile.DateTimeFormat;
                     }
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show(string.Format("{0} {1}", ex.Message, ex.StackTrace));
             }
@@ -812,7 +1110,7 @@ namespace VisualVault.Forms.Import
             //clear the controls
             cboProfiles.Items.Clear();
 
-            _profiles.Items.Sort((p1, p2) => System.String.Compare(p1.Name, p2.Name, System.StringComparison.Ordinal));
+            _profiles.Items.Sort((p1, p2) => p1.Name.CompareTo(p2.Name));
 
             foreach (var profile in _profiles.Items)
             {
@@ -846,7 +1144,175 @@ namespace VisualVault.Forms.Import
             }
         }
 
+
+
         #endregion
-       
+
+        #region Treeview
+
+        private Guid _selectedFolderId;
+        private Folder _selectedFolder;
+
+        private void InitializeTreeview()
+        {
+            if (_vault != null)
+            {
+                TreeView1.Nodes.Clear();
+
+                var topLevelFolders = _vault.Folders.GetTopLevelFolders();
+
+                VvTreeNode node;
+                foreach (var folder in topLevelFolders)
+                {
+                    node = new VvTreeNode(folder.Id, folder.Name);
+                    node.Nodes.Add(new VvTreeNode(Guid.Empty, ""));
+                    TreeView1.Nodes.Add(node);
+                }
+
+                if (TreeView1.GetNodeCount(false) > 0)
+                {
+                    if (_selectedFolderId.Equals(Guid.Empty))
+                    {
+                        node = (VvTreeNode) TreeView1.Nodes[0];
+                        if (node != null)
+                        {
+                            TreeView1.SelectedNode = node;
+                            LoadChildTreeNodes(node);
+                            _selectedFolder = _vault.Folders.GetFolderByFolderId(node.NodeId);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("You are not logged in to the Target VisualVault Server", "Error", MessageBoxButtons.OK);
+            }
+        }
+
+        private void LoadChildTreeNodes(VvTreeNode node)
+        {
+            VvTreeNode childnode;
+            if (node.GetNodeCount(true) == 1)
+            {
+                childnode = (VvTreeNode)node.Nodes[0];
+                if (Guid.Empty.Equals(childnode.NodeId))
+                {
+                    node.Nodes.Remove(childnode);
+                }
+            }
+
+            var childFolders = _vault.Folders.GetChildFolders(node.NodeId);
+
+            foreach (var folder in childFolders)
+            {
+                childnode = new VvTreeNode(folder.Id, folder.Name);
+                childnode.Nodes.Add(new VvTreeNode(Guid.Empty, ""));
+                node.Nodes.Add(childnode);
+            }
+            
+            node.Expand();
+        }
+
+        private void TreeView1_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            var node = (VvTreeNode)e.Node;
+            if (node.GetNodeCount(true) == 1)
+            {
+                var childnode = (VvTreeNode)node.Nodes[0];
+                if (Guid.Empty.Equals(childnode.NodeId))
+                {
+                    node.Nodes.Remove(childnode);
+                    LoadChildTreeNodes(node);
+                }
+            }
+        }
+
+        private void TreeView1_BeforeSelect(object sender, TreeViewCancelEventArgs e)
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                Application.DoEvents();
+                var node = (VvTreeNode)e.Node;
+                if (node != null && _vault != null)
+                {
+                    _selectedFolderId = node.NodeId;
+                    _selectedFolder = _vault.Folders.GetFolderByFolderId(node.NodeId);
+
+                    lblFolderPath.Text = _selectedFolder.FolderPath;
+
+                    var securityMembers = _vault.Folders.GetFolderSecurityMembers(_selectedFolderId);
+                    BindSecurityMembersListView(securityMembers);
+                }
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
+        private void BindSecurityMembersListView(List<SecurityMember> securityMembers)
+        {
+            listViewSecurityMembers.Items.Clear();
+            foreach (SecurityMember securityMember in securityMembers)
+            {
+                var lvi = new MyListViewItem(securityMember.Id, securityMember.MemberName) { Checked = false };
+                lvi.SubItems.Add(securityMember.MemberRoleValue);
+                lvi.SubItems.Add(securityMember.MemberType.ToString());
+                
+                listViewSecurityMembers.Items.Add(lvi);
+                //if (_selectedDocument != null)
+                //{
+                //    if (doc.DocID.ToLower() == _selectedDocument.DocID.ToLower())
+                //    {
+                //        lvi.Selected = true;
+                //        lvi.BackColor = SystemColors.Highlight;
+                //        lvi.ForeColor = SystemColors.HighlightText;
+                //    }
+                //}
+            }
+
+            Application.DoEvents();
+        }
+
+        private void InitializSecurityMembersListView()
+        {
+            listViewSecurityMembers.Columns.Clear();
+            listViewSecurityMembers.View = View.Details;
+            listViewSecurityMembers.LabelEdit = false;
+            listViewSecurityMembers.AllowColumnReorder = true;
+            listViewSecurityMembers.CheckBoxes = false;
+            listViewSecurityMembers.FullRowSelect = true;
+            listViewSecurityMembers.GridLines = false;
+            listViewSecurityMembers.Sorting = SortOrder.Ascending;
+            listViewSecurityMembers.Columns.Add("DocID", 122, HorizontalAlignment.Right);
+            listViewSecurityMembers.Columns.Add("Description", 150, HorizontalAlignment.Left);
+            listViewSecurityMembers.Columns.Add("Rev", 40, HorizontalAlignment.Left);
+        }
+
+
+        private void btnSelectFolder_Click(object sender, EventArgs e)
+        {
+
+        }
+        
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+     
+        private void lblFolderPath_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnLoadFolders_Click(object sender, EventArgs e)
+        {
+            InitializeTreeview();
+        }
+
+        #endregion
     }
 }
