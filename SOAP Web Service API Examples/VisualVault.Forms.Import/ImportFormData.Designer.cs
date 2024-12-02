@@ -396,7 +396,7 @@ namespace VisualVault.Forms.Import
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
+            //this.tabControl1.Controls.Add(this.tabPage3); //hide export forms tab
             this.tabControl1.Controls.Add(this.tabPage4);
             //this.tabControl1.Controls.Add(this.tabPage5); //hide delete forms tab
             //this.tabControl1.Controls.Add(this.tabPage6); //hide create users tab

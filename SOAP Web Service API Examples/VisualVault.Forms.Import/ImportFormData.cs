@@ -71,7 +71,7 @@ namespace VisualVault.Forms.Import
             _actionType = FormImportActionType.GetTemplateList;
 
             tabPage2.Enabled = false;
-            tabPage3.Enabled = false;
+            //tabPage3.Enabled = false; /* Export Form Data tab hidden 2024-12-02 */
             tabPage5.Enabled = false;           
 
             ShowFirstProfile();
@@ -507,7 +507,7 @@ namespace VisualVault.Forms.Import
         private void EnableAllControls()
         {
             tabPage2.Enabled = true;
-            tabPage3.Enabled = true;
+            //tabPage3.Enabled = true;   /* Export Form Data tab hidden 2024-12-02 */
             tabPage5.Enabled = true;            
         }
 
